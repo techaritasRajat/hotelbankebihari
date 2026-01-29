@@ -1,0 +1,152 @@
+.google-reviews-section {
+  padding: var(--spacing-16) 0;
+  background-color: var(--color-bg-secondary);
+}
+
+.google-reviews-header {
+  text-align: center;
+  margin-bottom: var(--spacing-12);
+}
+
+.google-reviews-title {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-4) 0;
+}
+
+.google-reviews-subtitle {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  margin: 0;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.google-reviews-widget {
+  margin-top: var(--spacing-8);
+  position: relative;
+  min-height: 400px;
+}
+
+/* Loading state placeholder */
+.google-reviews-widget::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-neutral-200, #e5e5e5);
+  border-top-color: var(--color-primary-500, #f17a0f);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+@keyframes spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* Hide loading spinner once widget loads */
+.google-reviews-widget:has(iframe) {
+  min-height: auto;
+}
+
+.google-reviews-widget:has(iframe)::before {
+  display: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .google-reviews-section {
+    padding: var(--spacing-12) 0;
+  }
+
+  .google-reviews-title {
+    font-size: var(--font-size-2xl);
+  }
+
+  .google-reviews-subtitle {
+    font-size: var(--font-size-base);
+  }
+
+  .google-reviews-widget {
+    min-height: 350px;
+  }
+}
+
+@media (max-width: 480px) {
+  .google-reviews-section {
+    padding: var(--spacing-10) 0;
+  }
+
+  .google-reviews-title {
+    font-size: var(--font-size-xl);
+  }
+
+  .google-reviews-header {
+    margin-bottom: var(--spacing-8);
+  }
+
+  .google-reviews-widget {
+    min-height: 300px;
+  }
+}
+
+/* Ensure the widget is responsive */
+.google-reviews-widget iframe {
+  max-width: 100%;
+  width: 100%;
+}
+
+/* Error fallback styling */
+.reviews-error-fallback,
+.reviews-error-message {
+  text-align: center;
+  padding: var(--spacing-12) var(--spacing-6);
+  background-color: var(--color-neutral-100, #f5f5f5);
+  border-radius: var(--border-radius-lg, 0.5rem);
+  color: var(--color-text-secondary, #525252);
+  margin: var(--spacing-6) 0;
+}
+
+.reviews-error-fallback p,
+.reviews-error-message p {
+  margin: 0;
+  font-size: var(--font-size-base);
+}
+
+/* Ensure react-google-reviews styles don't conflict */
+.google-reviews-widget > div {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* Fix potential z-index issues */
+.google-reviews-widget {
+  z-index: 1;
+  position: relative;
+}
+
+/* Smooth fade-in for loaded reviews */
+.google-reviews-widget [class*="featurable"] {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

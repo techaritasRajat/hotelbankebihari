@@ -1,0 +1,35 @@
+.booking-section {
+  padding: var(--spacing-16) 0;
+  background-color: var(--color-bg-secondary);
+}
+
+.booking-section-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-8);
+}
+
+.booking-section-header {
+  text-align: center;
+  max-width: 600px;
+}
+
+.booking-section-title {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-4) 0;
+}
+
+.booking-section-subtitle {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.booking-section-form-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}

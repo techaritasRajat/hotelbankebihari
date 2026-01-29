@@ -1,0 +1,7 @@
+/* Design System Variables */
+@import './design-system/variables.css';
+
+/* Global Styles */
+@import './styles/globals.css';
+@import './styles/utilities.css';
+@import './styles/animations.css';

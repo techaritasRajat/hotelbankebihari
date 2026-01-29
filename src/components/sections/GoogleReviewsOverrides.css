@@ -1,0 +1,56 @@
+/* Override react-google-reviews styles to prevent UI breaks */
+
+/* Hide carousel navigation dots */
+.google-reviews-widget .slick-dots,
+.google-reviews-widget [class*="dots"],
+.google-reviews-widget ul[class*="slick-dots"] {
+  display: none !important;
+}
+
+/* Ensure reviews container doesn't overflow */
+.google-reviews-widget [class*="reviews-container"],
+.google-reviews-widget [class*="carousel"] {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* Fix carousel navigation buttons */
+.google-reviews-widget button {
+  z-index: 10;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.google-reviews-widget button:hover {
+  opacity: 0.8;
+}
+
+/* Ensure review cards have consistent spacing */
+.google-reviews-widget [class*="review-card"] {
+  margin: 0;
+  padding: var(--spacing-4, 1rem);
+  box-sizing: border-box;
+}
+
+/* Prevent text overflow in reviews */
+.google-reviews-widget [class*="review-text"] {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Fix star ratings display */
+.google-reviews-widget [class*="star"],
+.google-reviews-widget [class*="rating"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* Responsive fixes */
+@media (max-width: 768px) {
+  .google-reviews-widget [class*="review-card"] {
+    padding: var(--spacing-3, 0.75rem);
+    font-size: var(--font-size-sm, 0.875rem);
+  }
+}

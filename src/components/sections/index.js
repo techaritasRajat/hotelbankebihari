@@ -1,0 +1,9 @@
+export { default as HeroSection } from './HeroSection';
+export { default as AboutSection } from './AboutSection';
+export { default as RoomsSection } from './RoomsSection';
+export { default as AmenitiesSection } from './AmenitiesSection';
+export { default as GallerySection } from './GallerySection';
+export { default as TestimonialsSection } from './TestimonialsSection';
+export { default as GoogleReviewsSection } from './GoogleReviewsSection';
+export { default as ContactSection } from './ContactSection';
+export { default as BookingSection } from './BookingSection';

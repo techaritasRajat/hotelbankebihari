@@ -1,0 +1,28 @@
+.card {
+  background-color: var(--color-bg-primary);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-base);
+  overflow: hidden;
+  transition: all var(--transition-duration-base) var(--transition-timing-ease-in-out);
+}
+
+.card--default {
+  padding: var(--spacing-6);
+}
+
+.card--elevated {
+  box-shadow: var(--shadow-lg);
+}
+
+.card--outlined {
+  border: 1px solid var(--color-neutral-200);
+  box-shadow: none;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.card--elevated:hover {
+  box-shadow: var(--shadow-xl);
+}

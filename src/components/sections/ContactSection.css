@@ -1,0 +1,109 @@
+.contact-section {
+  padding: var(--spacing-16) 0;
+  background-color: var(--color-bg-primary);
+}
+
+.contact-section-header {
+  text-align: center;
+  margin-bottom: var(--spacing-12);
+}
+
+.contact-section-title {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-4) 0;
+}
+
+.contact-section-subtitle {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  margin: 0;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.contact-section-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-8);
+}
+
+.contact-section-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+}
+
+.contact-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.contact-info-label {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.contact-info-value {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.contact-info-value a {
+  color: var(--color-primary-600);
+  text-decoration: none;
+  transition: color var(--transition-duration-base) var(--transition-timing-ease-in-out);
+}
+
+.contact-info-value a:hover {
+  color: var(--color-primary-700);
+}
+
+.contact-section-form-wrapper {
+  width: 100%;
+}
+
+.contact-section-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.contact-form-textarea-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.contact-form-textarea {
+  resize: vertical;
+  min-height: 120px;
+  font-family: var(--font-sans);
+  width: 100%;
+  padding: var(--spacing-3) var(--spacing-4);
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-duration-base) var(--transition-timing-ease-in-out);
+  outline: none;
+}
+
+.contact-form-textarea:focus {
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px var(--color-primary-100);
+}
+
+@media (min-width: 768px) {
+  .contact-section-content {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-12);
+  }
+}

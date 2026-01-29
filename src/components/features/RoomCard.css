@@ -1,0 +1,101 @@
+.room-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--transition-duration-base) var(--transition-timing-ease-in-out);
+}
+
+.room-card:hover {
+  transform: translateY(-4px);
+}
+
+.room-card--featured {
+  border: 2px solid var(--color-primary-500);
+}
+
+.room-card-badge {
+  position: absolute;
+  top: var(--spacing-4);
+  right: var(--spacing-4);
+  z-index: 1;
+}
+
+.room-card-image {
+  width: 100%;
+  height: 240px;
+  overflow: hidden;
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+.room-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.room-card-content {
+  padding: var(--spacing-6);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: var(--spacing-4);
+}
+
+.room-card-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.room-card-description {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+  margin: 0;
+  flex: 1;
+}
+
+.room-card-amenities {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+}
+
+.room-card-amenity {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  padding: var(--spacing-1) var(--spacing-2);
+  background-color: var(--color-neutral-100);
+  border-radius: var(--radius-base);
+}
+
+.room-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-4);
+  margin-top: auto;
+  padding-top: var(--spacing-4);
+  border-top: 1px solid var(--color-neutral-200);
+}
+
+.room-card-price {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-1);
+}
+
+.room-card-price-amount {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-600);
+}
+
+.room-card-price-period {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
