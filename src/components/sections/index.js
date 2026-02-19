@@ -7,3 +7,8 @@ export { default as TestimonialsSection } from './TestimonialsSection';
 export { default as GoogleReviewsSection } from './GoogleReviewsSection';
 export { default as ContactSection } from './ContactSection';
 export { default as BookingSection } from './BookingSection';
+export { default as QuickContactSection } from './QuickContactSection';
+export { default as PropertyCardsSection } from './PropertyCardsSection';
+export { default as NearbyAttractionsSection } from './NearbyAttractionsSection';
+export { default as ServicesSection } from './ServicesSection';
+export { default as EnquirySection } from './EnquirySection';

@@ -4,7 +4,7 @@ import Container from './Container';
 import Navigation from './Navigation';
 import MobileMenu from './MobileMenu';
 import { Button } from '../ui';
-import logoImage from '../../assets/icons/Banke Bihari Hotel.png';
+import logoFallback from '../../assets/icons/Banke Bihari Hotel.png';
 
 function Header({ logo, navigationItems = [], className = '' }) {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -32,7 +32,7 @@ function Header({ logo, navigationItems = [], className = '' }) {
         <div className="header-content">
           <div className="header-left">
             <div className="header-logo">
-              {logo || <img src={logoImage} alt="Shree Banke Bihari Heritage Hotel" className="header-logo-img" />}
+              {logo || <img src={logoFallback} alt="Banke Bihari Maheshwar" className="header-logo-img" />}
             </div>
           </div>
           <div className="header-center">

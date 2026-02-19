@@ -7,6 +7,7 @@ function HeroSection({
   title, 
   subtitle, 
   backgroundImage,
+  backgroundVideo,
   ctaText = 'Book Now',
   onCtaClick,
   className = '' 
@@ -21,11 +22,23 @@ function HeroSection({
 
   return (
     <section className={`hero-section ${className}`}>
-      {backgroundImage && (
+      {backgroundVideo ? (
+        <div className="hero-section-background">
+          <video
+            className="hero-section-video"
+            autoPlay
+            muted
+            loop
+            playsInline
+            src={backgroundVideo}
+            aria-hidden="true"
+          />
+        </div>
+      ) : backgroundImage ? (
         <div className="hero-section-background">
           <img src={backgroundImage} alt="" aria-hidden="true" />
         </div>
-      )}
+      ) : null}
       <div className="hero-section-overlay"></div>
       <Container>
         <div className="hero-section-content">

@@ -12,16 +12,18 @@ function AboutSection({
   return (
     <section className={`about-section ${className}`} id="about">
       <Container>
-        <div className="about-section-content">
-          {image && (
-            <div className="about-section-image">
-              <Image src={image.src} alt={image.alt || 'About us'} />
-            </div>
+        <div className="about-section-header">
+          {title && <h2 className="about-section-title">{title}</h2>}
+          {description && (
+            <p className="about-section-description">{description}</p>
           )}
-          <div className="about-section-text">
-            {title && <h2 className="about-section-title">{title}</h2>}
-            {description && (
-              <p className="about-section-description">{description}</p>
+        </div>
+        {(image || features.length > 0) && (
+          <div className="about-section-content">
+            {image && (
+              <div className="about-section-image">
+                <Image src={image.src} alt={image.alt || 'About us'} />
+              </div>
             )}
             {features.length > 0 && (
               <ul className="about-section-features">
@@ -33,7 +35,7 @@ function AboutSection({
               </ul>
             )}
           </div>
-        </div>
+        )}
       </Container>
     </section>
   );

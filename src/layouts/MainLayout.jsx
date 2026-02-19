@@ -1,33 +1,19 @@
+import { useLocation, Link } from 'react-router-dom';
 import './MainLayout.css';
 import { Header, Footer } from '../components/layout';
-import { hotelInfo } from '../constants';
-import { scrollTo } from '../utils';
+import { getLayoutConfig } from '../config/layoutConfig';
 import { FaFacebook, FaInstagram, FaWhatsapp } from 'react-icons/fa';
 
 function MainLayout({ children }) {
-  const navigationItems = [
-    { id: 'home', label: 'Home', href: '#home', onClick: () => scrollTo('home') },
-    { id: 'about', label: 'About', href: '#about', onClick: () => scrollTo('about') },
-    { id: 'rooms', label: 'Rooms', href: '#rooms', onClick: () => scrollTo('rooms') },
-    { id: 'amenities', label: 'Amenities', href: '#amenities', onClick: () => scrollTo('amenities') },
-    { id: 'gallery', label: 'Gallery', href: '#gallery', onClick: () => scrollTo('gallery') },
-    { id: 'contact', label: 'Contact', href: '#contact', onClick: () => scrollTo('contact') },
-    { 
-      id: 'book', 
-      label: 'Book Now', 
-      type: 'button', 
-      variant: 'primary',
-      onClick: () => scrollTo('booking')
-    },
-  ];
+  const { pathname } = useLocation();
+  const { logoSrc, logoAlt, navigationItems, footerLinks, footerDescription, copyright } =
+    getLayoutConfig(pathname);
 
-  const footerLinks = [
-    { label: 'About Us', href: '#about' },
-    { label: 'Rooms', href: '#rooms' },
-    { label: 'Amenities', href: '#amenities' },
-    { label: 'Gallery', href: '#gallery' },
-    { label: 'Contact', href: '#contact' },
-  ];
+  const logo = (
+    <Link to="/" className="header-logo-link">
+      <img src={logoSrc} alt={logoAlt} className="header-logo-img" />
+    </Link>
+  );
 
   const socialLinks = [
     { label: 'Facebook', href: 'https://facebook.com', icon: <FaFacebook /> },
@@ -37,13 +23,14 @@ function MainLayout({ children }) {
 
   return (
     <div className="main-layout">
-      <Header navigationItems={navigationItems} />
+      <Header logo={logo} navigationItems={navigationItems} />
       <main className="main-layout-content">{children}</main>
       <Footer
-        description={hotelInfo.description || 'Experience luxury and comfort in the heart of heritage.'}
+        logo={logo}
+        description={footerDescription}
         links={footerLinks}
         socialLinks={socialLinks}
-        copyright={`© ${new Date().getFullYear()} Banke Bihari Heritage Hotel. All rights reserved.`}
+        copyright={copyright}
       />
     </div>
   );

@@ -1,56 +1,389 @@
-/* Override react-google-reviews styles to prevent UI breaks */
+/* 
+ * Override react-google-reviews styles for professional UI
+ * Using BEM class names from the library documentation
+ * Ensures consistent card heights, aligned arrows, and design system integration
+ */
 
-/* Hide carousel navigation dots */
-.google-reviews-widget .slick-dots,
-.google-reviews-widget [class*="dots"],
-.google-reviews-widget ul[class*="slick-dots"] {
-  display: none !important;
-}
+/* ===== Carousel Container ===== */
 
-/* Ensure reviews container doesn't overflow */
-.google-reviews-widget [class*="reviews-container"],
-.google-reviews-widget [class*="carousel"] {
+/* Main carousel container - no extra padding since arrows are hidden */
+.google-reviews-widget .carousel {
+  position: relative;
+  padding: 0;
   max-width: 100%;
-  overflow: hidden;
+  overflow: visible;
 }
 
-/* Fix carousel navigation buttons */
-.google-reviews-widget button {
-  z-index: 10;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.google-reviews-widget button:hover {
-  opacity: 0.8;
-}
-
-/* Ensure review cards have consistent spacing */
-.google-reviews-widget [class*="review-card"] {
-  margin: 0;
-  padding: var(--spacing-4, 1rem);
+/* Slick slider wrapper */
+.google-reviews-widget .slick-slider {
+  position: relative;
+  display: block;
   box-sizing: border-box;
+  user-select: none;
+  touch-action: pan-y;
 }
 
-/* Prevent text overflow in reviews */
-.google-reviews-widget [class*="review-text"] {
+.google-reviews-widget .slick-list {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.google-reviews-widget .slick-track {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  left: 0;
+  top: 0;
+}
+
+/* ===== Review Cards - Consistent Heights ===== */
+
+/* Slick slide wrapper */
+.google-reviews-widget .slick-slide {
+  float: left;
+  height: auto;
+  min-height: 1px;
+  display: flex;
+}
+
+.google-reviews-widget .slick-slide>div {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+/* Force consistent card dimensions using BEM selector */
+.google-reviews-widget .carousel__card {
+  margin: 0 var(--spacing-3);
+  padding: var(--spacing-6);
+  box-sizing: border-box;
+  min-height: 340px;
+  max-height: 340px;
+  height: 340px;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg-primary);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-base);
+  border: 1px solid var(--color-neutral-200);
+  overflow: hidden;
+  contain: layout style;
+  transition: all var(--transition-duration-base) var(--transition-timing-ease-in-out);
+  width: 100%;
+}
+
+.google-reviews-widget .carousel__card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* Card internal structure */
+.google-reviews-widget .carousel__card>* {
+  flex-shrink: 0;
+}
+
+/* Review header section */
+.google-reviews-widget .carousel__card header,
+.google-reviews-widget .carousel__card>div:first-child {
+  margin-bottom: var(--spacing-3);
+}
+
+/* Profile/Author section */
+.google-reviews-widget .carousel__card [class*="profile"],
+.google-reviews-widget .carousel__card [class*="author"],
+.google-reviews-widget .carousel__card [class*="reviewer"] {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-3);
+}
+
+/* Avatar image */
+.google-reviews-widget .carousel__card img {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+/* Author name styling */
+.google-reviews-widget .carousel__card h3,
+.google-reviews-widget .carousel__card h4,
+.google-reviews-widget .carousel__card [class*="name"] {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+  line-height: var(--line-height-tight);
+}
+
+/* Star ratings */
+.google-reviews-widget .carousel__card [class*="star"],
+.google-reviews-widget .carousel__card [class*="rating"] {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin: var(--spacing-2) 0;
+  color: var(--color-warning-500);
+  font-size: var(--font-size-base);
+}
+
+/* Review text content - allow expansion */
+.google-reviews-widget .carousel__card [class*="comment"],
+.google-reviews-widget .carousel__card [class*="text"],
+.google-reviews-widget .carousel__card p {
   word-wrap: break-word;
   overflow-wrap: break-word;
   hyphens: auto;
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-secondary);
+  margin: var(--spacing-3) 0;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: var(--spacing-2);
+  max-height: 180px;
 }
 
-/* Fix star ratings display */
-.google-reviews-widget [class*="star"],
-.google-reviews-widget [class*="rating"] {
-  display: inline-flex;
+/* Custom scrollbar for long reviews */
+.google-reviews-widget .carousel__card [class*="comment"]::-webkit-scrollbar,
+.google-reviews-widget .carousel__card [class*="text"]::-webkit-scrollbar,
+.google-reviews-widget .carousel__card p::-webkit-scrollbar {
+  width: 5px;
+}
+
+.google-reviews-widget .carousel__card [class*="comment"]::-webkit-scrollbar-track,
+.google-reviews-widget .carousel__card [class*="text"]::-webkit-scrollbar-track,
+.google-reviews-widget .carousel__card p::-webkit-scrollbar-track {
+  background: var(--color-neutral-100);
+  border-radius: var(--radius-full);
+}
+
+.google-reviews-widget .carousel__card [class*="comment"]::-webkit-scrollbar-thumb,
+.google-reviews-widget .carousel__card [class*="text"]::-webkit-scrollbar-thumb,
+.google-reviews-widget .carousel__card p::-webkit-scrollbar-thumb {
+  background: var(--color-neutral-300);
+  border-radius: var(--radius-full);
+}
+
+.google-reviews-widget .carousel__card [class*="comment"]::-webkit-scrollbar-thumb:hover,
+.google-reviews-widget .carousel__card [class*="text"]::-webkit-scrollbar-thumb:hover,
+.google-reviews-widget .carousel__card p::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neutral-400);
+}
+
+/* Review date/time */
+.google-reviews-widget .carousel__card time,
+.google-reviews-widget .carousel__card [class*="date"] {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  margin-top: var(--spacing-2);
+}
+
+/* ===== Navigation Arrows - Hidden (Using Swipe & Pagination Instead) ===== */
+
+/* Hide navigation arrows - users can swipe or use pagination dots */
+.google-reviews-widget .carousel__btn,
+.google-reviews-widget .carousel__btn--left,
+.google-reviews-widget .carousel__btn--right {
+  display: none !important;
+}
+
+/* ===== Pagination Dots ===== */
+
+/* Pagination container */
+.google-reviews-widget .slick-dots {
+  position: relative;
+  display: flex !important;
   align-items: center;
-  gap: 2px;
+  justify-content: center;
+  gap: var(--spacing-2);
+  margin-top: var(--spacing-8);
+  padding: 0;
+  list-style: none;
+  bottom: auto !important;
 }
 
-/* Responsive fixes */
-@media (max-width: 768px) {
-  .google-reviews-widget [class*="review-card"] {
-    padding: var(--spacing-3, 0.75rem);
-    font-size: var(--font-size-sm, 0.875rem);
+.google-reviews-widget .slick-dots li {
+  margin: 0;
+  padding: 0;
+  width: auto;
+  height: auto;
+  line-height: 0;
+}
+
+/* Hide the button element itself */
+.google-reviews-widget .slick-dots li button {
+  font-size: 0;
+  line-height: 0;
+  display: block;
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  cursor: pointer;
+  color: transparent;
+  border: 0;
+  outline: none;
+  background: transparent;
+  position: relative;
+}
+
+/* Style the ::before pseudo-element (the actual dot) */
+.google-reviews-widget .slick-dots>li>button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-neutral-300);
+  opacity: 1;
+  transition: all var(--transition-duration-fast) var(--transition-timing-ease-in-out);
+  font-size: 0 !important;
+  line-height: 0 !important;
+}
+
+/* Hover state for dots */
+.google-reviews-widget .slick-dots>li>button:hover::before {
+  background-color: var(--color-neutral-400);
+  transform: scale(1.3);
+}
+
+/* Active dot - elongated and orange */
+.google-reviews-widget .slick-dots>li.slick-active>button {
+  width: 28px;
+}
+
+.google-reviews-widget .slick-dots>li.slick-active>button::before {
+  width: 28px;
+  background-color: var(--color-primary-500);
+  opacity: 1;
+}
+
+/* ===== Google logo and branding ===== */
+
+.google-reviews-widget [class*="logo"],
+.google-reviews-widget [class*="branding"] {
+  margin-top: var(--spacing-4);
+  opacity: 0.7;
+  transition: opacity var(--transition-duration-base) var(--transition-timing-ease-in-out);
+}
+
+.google-reviews-widget [class*="logo"]:hover {
+  opacity: 1;
+}
+
+/* ===== Responsive Adjustments ===== */
+
+/* Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
+  .google-reviews-widget .carousel__card {
+    min-height: 320px;
+    max-height: 320px;
+    height: 320px;
+    padding: var(--spacing-5);
+    margin: 0 var(--spacing-2);
   }
+}
+
+/* Mobile (< 768px) */
+@media (max-width: 768px) {
+  .google-reviews-widget .carousel__card {
+    min-height: 300px;
+    max-height: 300px;
+    height: 300px;
+    padding: var(--spacing-4);
+    margin: 0 var(--spacing-2);
+  }
+
+  .google-reviews-widget .carousel__card h3,
+  .google-reviews-widget .carousel__card h4 {
+    font-size: var(--font-size-sm);
+  }
+
+  .google-reviews-widget .carousel__card [class*="comment"],
+  .google-reviews-widget .carousel__card [class*="text"],
+  .google-reviews-widget .carousel__card p {
+    font-size: var(--font-size-xs);
+    max-height: 150px;
+  }
+
+  .google-reviews-widget .carousel__card img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .google-reviews-widget .slick-dots {
+    margin-top: var(--spacing-6);
+  }
+
+  .google-reviews-widget .slick-dots>li>button::before {
+    width: 8px;
+    height: 8px;
+  }
+
+  .google-reviews-widget .slick-dots>li.slick-active>button {
+    width: 22px;
+  }
+
+  .google-reviews-widget .slick-dots>li.slick-active>button::before {
+    width: 22px;
+  }
+}
+
+/* Small mobile (< 480px) */
+@media (max-width: 480px) {
+  .google-reviews-widget .carousel__card {
+    min-height: 280px;
+    max-height: 280px;
+    height: 280px;
+    padding: var(--spacing-3);
+  }
+
+  .google-reviews-widget .carousel__card img {
+    width: 36px;
+    height: 36px;
+  }
+
+  .google-reviews-widget .carousel__card [class*="comment"],
+  .google-reviews-widget .carousel__card [class*="text"],
+  .google-reviews-widget .carousel__card p {
+    max-height: 130px;
+  }
+}
+
+/* ===== Performance Optimizations ===== */
+
+/* Improve rendering performance */
+.google-reviews-widget .carousel__card {
+  contain: layout style;
+}
+
+/* Smooth transitions */
+.google-reviews-widget * {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== Accessibility ===== */
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .google-reviews-widget .carousel__card,
+  .google-reviews-widget .slick-dots>li>button::before {
+    transition: none;
+  }
+}
+
+/* Focus styles for keyboard navigation on pagination dots */
+.google-reviews-widget .slick-dots>li>button:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+  border-radius: var(--radius-full);
 }

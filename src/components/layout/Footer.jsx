@@ -1,6 +1,6 @@
 import './Footer.css';
 import Container from './Container';
-import logoImage from '../../assets/icons/Banke Bihari Hotel.png';
+import logoFallback from '../../assets/icons/Banke Bihari Hotel.png';
 
 function Footer({ 
   logo, 
@@ -18,7 +18,7 @@ function Footer({
         <div className="footer-content">
           <div className="footer-section footer-section--about">
             <div className="footer-logo">
-              {logo || <img src={logoImage} alt="Shree Banke Bihari Heritage Hotel" className="footer-logo-img" />}
+              {logo || <img src={logoFallback} alt="Banke Bihari Maheshwar" className="footer-logo-img" />}
             </div>
             {description && <p className="footer-description">{description}</p>}
           </div>

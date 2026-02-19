@@ -1,0 +1,195 @@
+.nearby-section {
+  padding: var(--spacing-16) 0 var(--spacing-8);
+  background-color: var(--color-bg-primary);
+  overflow: hidden;
+}
+
+.nearby-header {
+  text-align: center;
+  margin-bottom: var(--spacing-10);
+}
+
+.nearby-title {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-4) 0;
+}
+
+.nearby-subtitle {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  margin: 0 auto;
+  max-width: 560px;
+  line-height: var(--line-height-relaxed);
+}
+
+/* Track wrapper — clips overflow on all breakpoints */
+.nearby-track-wrapper {
+  overflow: hidden;
+  cursor: grab;
+  user-select: none;
+}
+
+.nearby-track-wrapper:active {
+  cursor: grabbing;
+}
+
+/* Scrollable carousel track */
+.nearby-track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  gap: var(--spacing-4);
+  padding: 0 var(--spacing-4) var(--spacing-4);
+}
+
+.nearby-track::-webkit-scrollbar {
+  display: none;
+}
+
+/* Cards — mobile: one card fills the view */
+.nearby-card {
+  flex: 0 0 calc(100% - var(--spacing-8));
+  scroll-snap-align: start;
+  background-color: var(--color-bg-primary);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow var(--transition-duration-base) var(--transition-timing-ease-in-out);
+}
+
+.nearby-card:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.nearby-card-image-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background-color: var(--color-neutral-100);
+}
+
+.nearby-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.nearby-card-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-primary-50), var(--color-primary-100));
+}
+
+.nearby-card-placeholder-icon {
+  font-size: 2.5rem;
+  opacity: 0.5;
+}
+
+.nearby-card-distance {
+  position: absolute;
+  bottom: var(--spacing-2);
+  right: var(--spacing-2);
+  background-color: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+.nearby-card-body {
+  padding: var(--spacing-3) var(--spacing-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  flex: 1;
+}
+
+.nearby-card-title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+  line-height: var(--line-height-tight);
+}
+
+.nearby-card-description {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: var(--line-height-relaxed);
+}
+
+/* Pagination dots */
+.nearby-dots {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-2);
+  margin-top: var(--spacing-6);
+  padding-bottom: var(--spacing-8);
+}
+
+.nearby-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  border: none;
+  background-color: var(--color-neutral-300);
+  cursor: pointer;
+  padding: 0;
+  transition: all var(--transition-duration-base) var(--transition-timing-ease-in-out);
+}
+
+.nearby-dot--active {
+  background-color: var(--color-primary-600);
+  width: 24px;
+}
+
+/* Tablet: 2 cards visible per view */
+@media (min-width: 768px) {
+  .nearby-track {
+    padding: 0 var(--spacing-6) var(--spacing-4);
+  }
+
+  .nearby-card {
+    /* (100% - 1 gap) / 2 cards */
+    flex: 0 0 calc(50% - var(--spacing-2));
+  }
+}
+
+/* Desktop: 4 cards visible per view, still a scrollable carousel */
+@media (min-width: 1024px) {
+  .nearby-title {
+    font-size: var(--font-size-4xl);
+  }
+
+  /* Constrain the carousel to the container width */
+  .nearby-track-wrapper {
+    max-width: var(--container-xl);
+    margin: 0 auto;
+    padding: 0 var(--spacing-6);
+  }
+
+  .nearby-track {
+    /* No side padding — wrapper handles it */
+    padding: 0 0 var(--spacing-4);
+    gap: var(--spacing-4);
+  }
+
+  .nearby-card {
+    /* (100% - 3 gaps) / 4 cards  →  25% - 12px */
+    flex: 0 0 calc(25% - var(--spacing-3));
+  }
+}

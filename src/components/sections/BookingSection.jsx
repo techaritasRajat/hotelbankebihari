@@ -7,10 +7,11 @@ function BookingSection({
   subtitle,
   onSubmit,
   whatsappNumber,
+  id = 'booking',
   className = '' 
 }) {
   return (
-    <section className={`booking-section ${className}`} id="booking">
+    <section className={`booking-section ${className}`} id={id}>
       <Container>
         <div className="booking-section-content">
           <div className="booking-section-header">

@@ -37,7 +37,7 @@ function MobileMenu({ items = [], className = '' }) {
       </div>
       <div className={`mobile-menu-overlay ${isOpen ? 'mobile-menu-overlay--open' : ''}`} onClick={closeMenu}>
         <div className="mobile-menu-content" onClick={(e) => e.stopPropagation()}>
-          <Navigation items={items} />
+          <Navigation items={items} isMobile onItemClick={closeMenu} />
         </div>
       </div>
     </div>

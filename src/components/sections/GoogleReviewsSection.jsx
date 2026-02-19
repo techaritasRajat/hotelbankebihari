@@ -24,6 +24,14 @@ function GoogleReviewsSection({
             <ReactGoogleReviews 
               layout="carousel" 
               featurableId={featurableId}
+              maxItems={3}
+              carouselAutoplay={true}
+              carouselSpeed={5000}
+              theme="light"
+              reviewVariant="card"
+              maxCharacters={200}
+              dateDisplay="relative"
+              nameDisplay="firstAndLastInitials"
             />
           </ReviewsErrorBoundary>
         </div>

@@ -1,0 +1,38 @@
+.services-section {
+  background-color: var(--color-bg-primary);
+}
+
+.services-card-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-primary-50), var(--color-primary-100));
+  aspect-ratio: unset;
+  min-height: 140px;
+  padding: var(--spacing-6) var(--spacing-4);
+}
+
+.services-card-icon-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.services-card-icon {
+  font-size: 3rem;
+  line-height: 1;
+  display: block;
+}
+
+.services-card-category {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-primary-700);
+  background-color: var(--color-primary-100);
+  padding: var(--spacing-1) var(--spacing-3);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}

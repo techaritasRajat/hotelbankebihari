@@ -16,7 +16,8 @@
   z-index: 0;
 }
 
-.hero-section-background img {
+.hero-section-background img,
+.hero-section-video {
   width: 100%;
   height: 100%;
   object-fit: cover;

@@ -6,6 +6,7 @@ function ContactSection({
   title, 
   subtitle,
   contactInfo = {},
+  mapEmbedUrl,
   onSubmit,
   className = '' 
 }) {
@@ -27,6 +28,18 @@ function ContactSection({
         </div>
         <div className="contact-section-content">
           <div className="contact-section-info">
+            {mapEmbedUrl && (
+              <div className="contact-map-wrapper">
+                <iframe
+                  title="Location Map"
+                  src={mapEmbedUrl}
+                  className="contact-map-iframe"
+                  allowFullScreen=""
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              </div>
+            )}
             {contactInfo.address && (
               <div className="contact-info-item">
                 <h3 className="contact-info-label">Address</h3>

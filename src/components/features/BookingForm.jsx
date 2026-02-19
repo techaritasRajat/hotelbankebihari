@@ -2,11 +2,12 @@ import { useState } from 'react';
 import './BookingForm.css';
 import { Card, Input, Button, LoadingSpinner, Modal } from '../ui';
 
-function BookingForm({ onSubmit, className = '', whatsappNumber }) {
+function BookingForm({ onSubmit, className = '' }) {
   const [formData, setFormData] = useState({
     checkIn: '',
     checkOut: '',
-    guests: '1',
+    adults: '2',
+    children: '0',
     name: '',
     email: '',
     phone: '',
@@ -14,6 +15,7 @@ function BookingForm({ onSubmit, className = '', whatsappNumber }) {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [apiError, setApiError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,6 +38,18 @@ function BookingForm({ onSubmit, className = '', whatsappNumber }) {
     }
     if (!formData.phone) newErrors.phone = 'Phone is required';
 
+    // Validate adults
+    const adults = parseInt(formData.adults);
+    if (!formData.adults || isNaN(adults) || adults < 1 || adults > 10) {
+      newErrors.adults = 'Adults must be between 1 and 10';
+    }
+
+    // Validate children (optional)
+    const children = parseInt(formData.children || 0);
+    if (isNaN(children) || children < 0 || children > 5) {
+      newErrors.children = 'Children must be between 0 and 5';
+    }
+
     if (formData.checkIn && formData.checkOut && formData.checkIn >= formData.checkOut) {
       newErrors.checkOut = 'Check-out must be after check-in';
     }
@@ -44,42 +58,19 @@ function BookingForm({ onSubmit, className = '', whatsappNumber }) {
     return Object.keys(newErrors).length === 0;
   };
 
-  const formatWhatsAppMessage = (data) => {
-    const checkInDate = new Date(data.checkIn).toLocaleDateString('en-US', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    });
-    const checkOutDate = new Date(data.checkOut).toLocaleDateString('en-US', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
+  const sendBookingEnquiry = async (data) => {
+    const response = await fetch('/api/booking-enquiry', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
     });
 
-    const message = `*New Booking Enquiry*
-
-Name: ${data.name}
-Email: ${data.email}
-Phone: ${data.phone}
-
-Check-in: ${checkInDate}
-Check-out: ${checkOutDate}
-Guests: ${data.guests}`;
-
-    return encodeURIComponent(message);
-  };
-
-  const sendWhatsAppEnquiry = (data) => {
-    if (!whatsappNumber) {
-      console.error('WhatsApp number not configured');
-      return;
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to send enquiry');
     }
 
-    const cleanNumber = whatsappNumber.replace(/[^0-9]/g, '');
-    const message = formatWhatsAppMessage(data);
-    const whatsappUrl = `https://wa.me/${cleanNumber}?text=${message}`;
-    
-    window.open(whatsappUrl, '_blank');
+    return response.json();
   };
 
   const handleSubmit = async (e) => {
@@ -87,9 +78,11 @@ Guests: ${data.guests}`;
     if (!validate()) return;
 
     setIsSubmitting(true);
+    setApiError('');
+
     try {
-      // Send WhatsApp enquiry
-      sendWhatsAppEnquiry(formData);
+      // Send booking enquiry to API
+      await sendBookingEnquiry(formData);
       
       // Call onSubmit if provided
       if (onSubmit) {
@@ -100,6 +93,7 @@ Guests: ${data.guests}`;
       setShowSuccessModal(true);
     } catch (error) {
       console.error('Booking enquiry error:', error);
+      setApiError(error.message || 'Failed to send booking enquiry. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -107,11 +101,13 @@ Guests: ${data.guests}`;
 
   const handleModalClose = () => {
     setShowSuccessModal(false);
+    setApiError('');
     // Reset form after modal closes
     setFormData({
       checkIn: '',
       checkOut: '',
-      guests: '1',
+      adults: '2',
+      children: '0',
       name: '',
       email: '',
       phone: '',
@@ -121,6 +117,18 @@ Guests: ${data.guests}`;
   return (
     <Card className={`booking-form ${className}`} variant="elevated">
       {/* <h2 className="booking-form-title">Send Booking Enquiry</h2> */}
+      {apiError && (
+        <div className="booking-form-error" style={{ 
+          padding: '12px', 
+          marginBottom: '16px', 
+          backgroundColor: '#fee', 
+          color: '#c00', 
+          borderRadius: '8px',
+          border: '1px solid #fcc'
+        }}>
+          {apiError}
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="booking-form-content">
         <div className="booking-form-row">
           <Input
@@ -142,16 +150,29 @@ Guests: ${data.guests}`;
             required
           />
         </div>
-        <Input
-          label="Guests"
-          type="number"
-          name="guests"
-          value={formData.guests}
-          onChange={handleChange}
-          min="1"
-          max="10"
-          required
-        />
+        <div className="booking-form-row">
+          <Input
+            label="Adults"
+            type="number"
+            name="adults"
+            value={formData.adults}
+            onChange={handleChange}
+            error={errors.adults}
+            min="1"
+            max="10"
+            required
+          />
+          <Input
+            label="Children"
+            type="number"
+            name="children"
+            value={formData.children}
+            onChange={handleChange}
+            error={errors.children}
+            min="0"
+            max="5"
+          />
+        </div>
         <Input
           label="Full Name"
           type="text"

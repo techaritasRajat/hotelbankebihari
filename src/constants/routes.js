@@ -1,11 +1,8 @@
 export const routes = {
   home: '/',
-  rooms: '/rooms',
-  contact: '/contact',
-  about: '/#about',
-  amenities: '/#amenities',
-  gallery: '/#gallery',
-  booking: '/#booking',
+  heritage: '/shree-banke-bihari-heritage',
+  palace: '/shree-banke-bihari-palace',
+  bhojnalay: '/shree-banke-bihari-bhojnalay',
 };
 
 export default routes;

@@ -1,0 +1,72 @@
+.bhojnalay-page {
+  width: 100%;
+}
+
+.bhojnalay-timings {
+  padding: var(--spacing-16) 0;
+  background-color: var(--color-bg-primary);
+}
+
+.bhojnalay-timings-content {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.bhojnalay-timings-title {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-2);
+}
+
+.bhojnalay-timings-subtitle {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  margin: 0 0 var(--spacing-8);
+}
+
+.bhojnalay-timings-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.bhojnalay-timings-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-4);
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+}
+
+.bhojnalay-timings-label {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+}
+
+.bhojnalay-timings-value {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.bhojnalay-page-back-link {
+  padding: var(--spacing-8) var(--spacing-4);
+  text-align: center;
+  border-top: 1px solid var(--color-neutral-200);
+}
+
+.bhojnalay-page-back-link-anchor {
+  color: var(--color-primary-600);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-base);
+  transition: color var(--transition-duration-base) var(--transition-timing-ease-in-out);
+}
+
+.bhojnalay-page-back-link-anchor:hover {
+  color: var(--color-primary-700);
+  text-decoration: underline;
+}
