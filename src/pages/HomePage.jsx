@@ -12,25 +12,7 @@ import {
 import { hotelInfo, roomTypes, amenities } from '../constants';
 
 function HomePage() {
-  const handleBookNow = () => {
-    // Scroll to booking section
-    const bookingSection = document.getElementById('booking');
-    if (bookingSection) {
-      bookingSection.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const handleBookingSubmit = async (formData) => {
-    // Handle booking submission
-    console.log('Booking submitted:', formData);
-    // In a real app, this would call a booking service
-  };
-
-  const handleContactSubmit = async (formData) => {
-    // Handle contact form submission
-    console.log('Contact form submitted:', formData);
-    // In a real app, this would call a contact service
-  };
+  const handleBookNow = () => document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' });
 
   return (
     <div className="home-page">
@@ -38,6 +20,7 @@ function HomePage() {
         title="Welcome to Banke Bihari Heritage Hotel"
         subtitle="Experience luxury and comfort in the heart of heritage"
         ctaText="Book Your Stay"
+        onCtaClick={handleBookNow}
       />
       <AboutSection
         title="About Our Hotel"
@@ -72,14 +55,11 @@ function HomePage() {
       <BookingSection
         title="Send Booking Enquiry"
         subtitle="Send us an enquiry and our team will contact you to confirm your reservation"
-        onSubmit={handleBookingSubmit}
-        whatsappNumber={hotelInfo.whatsappNumber}
       />
       <ContactSection
         title="Contact Us"
         subtitle="Get in touch with us for any inquiries"
         contactInfo={hotelInfo}
-        onSubmit={handleContactSubmit}
       />
     </div>
   );

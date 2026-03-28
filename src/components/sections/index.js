@@ -12,3 +12,4 @@ export { default as PropertyCardsSection } from './PropertyCardsSection';
 export { default as NearbyAttractionsSection } from './NearbyAttractionsSection';
 export { default as ServicesSection } from './ServicesSection';
 export { default as EnquirySection } from './EnquirySection';
+export { default as FeedbackSection } from './FeedbackSection';

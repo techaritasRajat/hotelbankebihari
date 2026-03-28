@@ -25,13 +25,8 @@ const homeContactInfo = {
 };
 
 function LandingPage() {
-  const handleContactSubmit = async (formData) => {
-    console.log('Contact form submitted:', formData);
-  };
-
   return (
     <div className="landing-page" id="home">
-      {/* Hero — cinematic video */}
       <HeroSection
         title="Welcome to Banke Bihari Maheshwar"
         subtitle="Heritage. Hospitality. Home."
@@ -39,34 +34,23 @@ function LandingPage() {
         ctaText="Explore Our Properties"
         onCtaClick={() => scrollTo('about')}
       />
-
-      {/* About — 3 property cards */}
       <PropertyCardsSection
         id="about"
         title="About Us"
         subtitle="Three unique destinations, one extraordinary heritage experience in the heart of Maheshwar"
       />
-
-      {/* Services — distinct service offerings */}
       <ServicesSection />
-
-      {/* Nearby Attractions carousel */}
       <NearbyAttractionsSection />
-
-      {/* Enquiry form with service dropdown */}
       <EnquirySection
         id="enquiry"
         title="Send an Enquiry"
         subtitle="Tell us which service you're interested in and our team will get back to you shortly"
       />
-
-      {/* Contact + Map */}
       <ContactSection
         title="Contact Us"
         subtitle="We'd love to hear from you"
         contactInfo={homeContactInfo}
         mapEmbedUrl={MAP_EMBED_URL}
-        onSubmit={handleContactSubmit}
       />
     </div>
   );

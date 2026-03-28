@@ -10,24 +10,13 @@ import Container from '../components/layout/Container';
 import { hotelInfo } from '../constants';
 
 function BhojnalayPage() {
-  const handleBookNow = () => {
-    const bookingSection = document.getElementById('booking');
-    if (bookingSection) {
-      bookingSection.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const handleContactSubmit = async (formData) => {
-    console.log('Contact form submitted:', formData);
-  };
-
   return (
     <div className="bhojnalay-page">
       <HeroSection
         title="Welcome to Banke Bihari Bhojnalaya"
         subtitle="Authentic culinary experience in the heart of heritage"
         ctaText="Contact Us"
-        onCtaClick={handleBookNow}
+        onCtaClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
       />
       <AboutSection
         title="About Banke Bihari Bhojnalaya"
@@ -70,7 +59,6 @@ function BhojnalayPage() {
         title="Contact Us"
         subtitle="Get in touch with us for any inquiries"
         contactInfo={hotelInfo}
-        onSubmit={handleContactSubmit}
       />
       <div className="bhojnalay-page-back-link">
         <Link to="/" className="bhojnalay-page-back-link-anchor">

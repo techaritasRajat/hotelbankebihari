@@ -13,17 +13,7 @@ import { hotelInfo, roomTypes, amenities } from '../constants';
 import { scrollTo } from '../utils';
 
 function HeritageHotelPage() {
-  const handleBookNow = () => {
-    scrollTo('booking');
-  };
-
-  const handleBookingSubmit = async (formData) => {
-    console.log('Booking submitted:', formData);
-  };
-
-  const handleContactSubmit = async (formData) => {
-    console.log('Contact form submitted:', formData);
-  };
+  const handleBookNow = () => scrollTo('booking');
 
   return (
     <div className="home-page">
@@ -66,14 +56,11 @@ function HeritageHotelPage() {
       <BookingSection
         title="Send Booking Enquiry"
         subtitle="Send us an enquiry and our team will contact you to confirm your reservation"
-        onSubmit={handleBookingSubmit}
-        whatsappNumber={hotelInfo.whatsappNumber}
       />
       <ContactSection
         title="Contact Us"
         subtitle="Get in touch with us for any inquiries"
         contactInfo={hotelInfo}
-        onSubmit={handleContactSubmit}
       />
     </div>
   );

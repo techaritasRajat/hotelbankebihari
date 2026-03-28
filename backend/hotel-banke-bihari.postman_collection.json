@@ -1,0 +1,411 @@
+{
+  "info": {
+    "name": "Hotel Banke Bihari — Local API",
+    "description": "Complete API collection for Hotel Banke Bihari backend. Includes public form endpoints and JWT-protected admin endpoints.\n\n**Setup:**\n1. Start DynamoDB Local: `npm run db:local`\n2. Start Express server: `npm run dev`\n3. Run 'Admin Login' first — the token is auto-saved to `{{token}}`\n\n**Base URL:** http://localhost:3001",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3001",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string",
+      "description": "Auto-populated by the Admin Login request"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "GET Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            },
+            "description": "Returns server status, environment, and timestamp."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\"status\":\"ok\",\"env\":\"development\",\"ts\":\"2026-03-28T10:00:00.000Z\"}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Public — Forms",
+      "item": [
+        {
+          "name": "POST Enquiry",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Rajat Sharma\",\n  \"phone\": \"9817934306\",\n  \"email\": \"rajat@example.com\",\n  \"service\": \"heritage\",\n  \"message\": \"Looking for a deluxe room for 2 nights\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/enquiries",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "enquiries"]
+            },
+            "description": "Submit a general enquiry.\n\n**service** must be one of: `heritage`, `palace`, `bhojnalay`, `events`, `devotional`, `general`\n\nPerson identity is resolved by phone (primary) or email (secondary). Same person submitting multiple forms gets grouped under the same personId."
+          }
+        },
+        {
+          "name": "POST Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Rajat Sharma\",\n  \"phone\": \"9817934306\",\n  \"email\": \"rajat@example.com\",\n  \"checkIn\": \"2026-04-10\",\n  \"checkOut\": \"2026-04-12\",\n  \"adults\": 2,\n  \"children\": 0\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings"]
+            },
+            "description": "Submit a booking enquiry.\n\n- `checkIn` and `checkOut` must be `YYYY-MM-DD` format\n- `checkOut` must be after `checkIn`\n- `adults` must be at least 1"
+          }
+        },
+        {
+          "name": "POST Feedback",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Rajat Sharma\",\n  \"email\": \"rajat@example.com\",\n  \"rating\": 5,\n  \"message\": \"Excellent hospitality and amazing food!\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/feedback",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "feedback"]
+            },
+            "description": "Submit feedback.\n\n- `rating` must be an integer between 1 and 5\n- `message` is required"
+          }
+        },
+        {
+          "name": "POST Contact",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Priya Singh\",\n  \"phone\": \"8800112233\",\n  \"message\": \"What are your wedding event packages?\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/contacts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "contacts"]
+            },
+            "description": "Submit a contact message. `message` is required."
+          }
+        },
+        {
+          "name": "POST Enquiry — Validation Error (missing name)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"9817934306\",\n  \"service\": \"heritage\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/enquiries",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "enquiries"]
+            },
+            "description": "Intentional validation failure — missing required `name` field. Expect 400 with field-level errors."
+          }
+        },
+        {
+          "name": "POST Booking — Validation Error (bad dates)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test User\",\n  \"phone\": \"9817934306\",\n  \"checkIn\": \"2026-04-12\",\n  \"checkOut\": \"2026-04-10\",\n  \"adults\": 2\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings"]
+            },
+            "description": "Intentional validation failure — checkOut is before checkIn. Expect 400."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "POST Admin Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.token) {",
+                  "  pm.collectionVariables.set('token', res.token);",
+                  "  console.log('JWT token saved to {{token}}');",
+                  "} else {",
+                  "  console.error('Login failed:', JSON.stringify(res));",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"changeme\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "login"]
+            },
+            "description": "Authenticates admin and returns a JWT token (8h expiry).\n\n**Run this first** — the Tests script automatically saves the token to `{{token}}` so all other admin requests work without manual copy-paste."
+          }
+        },
+        {
+          "name": "POST Admin Login — Wrong Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"wrongpassword\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "login"]
+            },
+            "description": "Intentional auth failure. Expect 401 Invalid credentials."
+          }
+        },
+        {
+          "name": "GET Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "stats"]
+            },
+            "description": "Returns submission counts by type (enquiry/booking/feedback/contact), by status (new/read/resolved), total, and today's count."
+          }
+        },
+        {
+          "name": "GET All Submissions",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/submissions",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "submissions"],
+              "query": [
+                { "key": "type", "value": "", "description": "Filter: enquiry | booking | feedback | contact", "disabled": true },
+                { "key": "status", "value": "", "description": "Filter: new | read | resolved", "disabled": true },
+                { "key": "limit", "value": "50", "description": "Max results per page", "disabled": true }
+              ]
+            },
+            "description": "Returns all submissions. Use the optional query params to filter by type or status. Each item includes PK and SK needed for PATCH/DELETE."
+          }
+        },
+        {
+          "name": "GET All Submissions — Filter by Type (enquiry)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/submissions?type=enquiry",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "submissions"],
+              "query": [
+                { "key": "type", "value": "enquiry" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET All Persons (Grouped View)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/persons",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "persons"]
+            },
+            "description": "Returns all known persons sorted by last activity. Each person card shows:\n- name, phone, email\n- submissionTypes (which form types they've used)\n- submissionCount (total across all types)\n- lastSeenAt\n\nPersons with the same phone/email are deduplicated — multiple form submissions from one person appear as a single entry."
+          }
+        },
+        {
+          "name": "GET Person Submissions (Rajat - by phone)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/persons/PERSON%23919817934306/submissions",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "persons", "PERSON%23919817934306", "submissions"]
+            },
+            "description": "Returns all submissions from a single person along with their profile.\n\nThe personId in the URL is URL-encoded: `PERSON#919817934306` → `PERSON%23919817934306`\n\nGet the correct personId from the 'GET All Persons' or 'GET All Submissions' responses."
+          }
+        },
+        {
+          "name": "PATCH Update Submission Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"read\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/submissions/:pk/:sk/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "submissions", ":pk", ":sk", "status"],
+              "variable": [
+                {
+                  "key": "pk",
+                  "value": "TYPE%23enquiry",
+                  "description": "URL-encoded PK from submission (e.g. TYPE#enquiry → TYPE%23enquiry)"
+                },
+                {
+                  "key": "sk",
+                  "value": "",
+                  "description": "URL-encoded SK from submission (e.g. #2026-03-28T10:00:00.000Z#uuid → %232026-03-28T10%3A00%3A00.000Z%23uuid)"
+                }
+              ]
+            },
+            "description": "Updates the status of a submission.\n\n**status** must be: `new`, `read`, or `resolved`\n\n**How to get PK and SK:**\n1. Run 'GET All Submissions'\n2. Copy the `PK` value from any item (e.g. `TYPE#enquiry`)\n3. Copy the `SK` value (e.g. `#2026-03-28T...#uuid`)\n4. URL-encode them: replace `#` with `%23`\n5. Paste into the path variables above"
+          }
+        },
+        {
+          "name": "PATCH Update Status — Invalid Value",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"pending\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/submissions/TYPE%23enquiry/fake-sk/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "submissions", "TYPE%23enquiry", "fake-sk", "status"]
+            },
+            "description": "Intentional validation error — `pending` is not a valid status. Expect 400."
+          }
+        },
+        {
+          "name": "DELETE Submission",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/submissions/:pk/:sk",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "submissions", ":pk", ":sk"],
+              "variable": [
+                {
+                  "key": "pk",
+                  "value": "TYPE%23enquiry",
+                  "description": "URL-encoded PK (replace # with %23)"
+                },
+                {
+                  "key": "sk",
+                  "value": "",
+                  "description": "URL-encoded SK from submission"
+                }
+              ]
+            },
+            "description": "Permanently deletes a submission.\n\nGet PK and SK from 'GET All Submissions' and URL-encode them."
+          }
+        },
+        {
+          "name": "GET Stats — No Token (401)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "stats"]
+            },
+            "description": "Intentional auth failure — no Authorization header. Expect 401."
+          }
+        }
+      ]
+    }
+  ]
+}

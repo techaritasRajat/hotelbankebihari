@@ -1,0 +1,33 @@
+{
+  "name": "hotel-banke-bihari-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "lint": "eslint src/",
+    "db:local": "node scripts/startDynamo.js",
+    "db:create": "node scripts/createTables.js",
+    "db:seed": "node scripts/seedAdmin.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.0.0",
+    "@aws-sdk/client-ssm": "^3.0.0",
+    "@aws-sdk/lib-dynamodb": "^3.0.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.19.0",
+    "express-rate-limit": "^7.0.0",
+    "helmet": "^7.0.0",
+    "jsonwebtoken": "^9.0.0",
+    "serverless-http": "^3.2.0",
+    "uuid": "^9.0.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "dynamodb-local": "^0.0.38",
+    "eslint": "^9.0.0",
+    "nodemon": "^3.0.0"
+  }
+}

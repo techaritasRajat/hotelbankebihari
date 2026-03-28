@@ -2,31 +2,28 @@ import { useState } from 'react';
 import './EnquirySection.css';
 import Container from '../layout/Container';
 import { Card, Input, Button, LoadingSpinner, Modal } from '../ui';
-import { saveEnquiry } from '../../services/enquiryService';
+import { submitEnquiry } from '../../services/apiService';
 
 const SERVICE_GROUPS = [
   {
     label: 'Stays & Dining',
     options: [
-      { value: 'Luxury Heritage Experience', label: '🏨  Luxury Heritage Experience' },
-      { value: 'Royal & Affordable Palace Stay', label: '🏰  Royal & Affordable Palace Stay' },
-      { value: 'Authentic Traditional Dining', label: '🍽  Authentic Traditional Dining' },
+      { value: 'heritage', label: '🏨  Heritage Hotel Stay' },
+      { value: 'palace', label: '🏰  Palace Stay' },
+      { value: 'bhojnalay', label: '🍽  Bhojnalay (Traditional Dining)' },
     ],
   },
   {
-    label: 'Events & Celebrations',
+    label: 'Events & Ceremonies',
     options: [
-      { value: 'Corporate Events & Meetings', label: '💼  Corporate Events & Meetings' },
-      { value: 'Weddings & Engagements', label: '💒  Weddings & Engagements' },
-      { value: 'Banquet Hall & Buffet Services', label: '🎉  Banquet Hall & Buffet Services' },
-      { value: 'Devotional & Kirtan Ceremonies', label: '🙏  Devotional & Kirtan Ceremonies' },
-      { value: 'Cultural & Heritage Events', label: '🎭  Cultural & Heritage Events' },
+      { value: 'events', label: '🎉  Events & Celebrations (Wedding / Corporate / Banquet)' },
+      { value: 'devotional', label: '🙏  Devotional & Kirtan Ceremonies' },
     ],
   },
   {
     label: 'Other',
     options: [
-      { value: 'General Enquiry', label: '💬  General Enquiry' },
+      { value: 'general', label: '💬  General Enquiry' },
     ],
   },
 ];
@@ -84,8 +81,17 @@ function EnquirySection({
 
     setIsSubmitting(true);
     try {
-      saveEnquiry(formData);
+      await submitEnquiry({
+        name: formData.name.trim(),
+        phone: formData.phone.trim(),
+        email: formData.email.trim(),
+        service: formData.service,
+        message: formData.message.trim() || undefined,
+      });
       setShowSuccess(true);
+    } catch (err) {
+      console.error('Enquiry submit error:', err);
+      setErrors((prev) => ({ ...prev, _api: err.message || 'Failed to submit. Please try again.' }));
     } finally {
       setIsSubmitting(false);
     }
@@ -95,6 +101,11 @@ function EnquirySection({
     setShowSuccess(false);
     setFormData(INITIAL_FORM);
     setErrors({});
+  };
+
+  const handleFormChange = (e) => {
+    handleChange(e);
+    if (errors._api) setErrors((prev) => ({ ...prev, _api: '' }));
   };
 
   return (
@@ -107,6 +118,11 @@ function EnquirySection({
           </div>
 
           <Card className="enquiry-section-card" variant="elevated">
+            {errors._api && (
+              <div style={{ padding: '12px', marginBottom: '16px', backgroundColor: '#fee2e2', color: '#b91c1c', borderRadius: '8px', border: '1px solid #fca5a5', fontSize: '14px' }}>
+                {errors._api}
+              </div>
+            )}
             <form onSubmit={handleSubmit} className="enquiry-form" noValidate>
               <div className="enquiry-form-row">
                 <Input
@@ -181,7 +197,7 @@ function EnquirySection({
                   className="input enquiry-textarea"
                   value={formData.message}
                   onChange={handleChange}
-                  placeholder="Tell us how we can help you..."
+                  placeholder="Tell us how we can help you... (For events, mention the type: wedding, corporate, banquet, etc.)"
                   rows={4}
                 />
               </div>

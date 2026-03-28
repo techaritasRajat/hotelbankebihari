@@ -11,24 +11,13 @@ import {
 import { hotelInfo, amenities } from '../constants';
 
 function PalacePage() {
-  const handleBookNow = () => {
-    const bookingSection = document.getElementById('booking');
-    if (bookingSection) {
-      bookingSection.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const handleContactSubmit = async (formData) => {
-    console.log('Contact form submitted:', formData);
-  };
-
   return (
     <div className="palace-page">
       <HeroSection
         title="Welcome to Hotel Shri Banke Bihari Palace"
         subtitle="Experience royal grandeur and heritage elegance"
         ctaText="Contact Us"
-        onCtaClick={handleBookNow}
+        onCtaClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
       />
       <AboutSection
         title="About Hotel Shri Banke Bihari Palace"
@@ -59,7 +48,6 @@ function PalacePage() {
         title="Contact Us"
         subtitle="Get in touch with us for any inquiries"
         contactInfo={hotelInfo}
-        onSubmit={handleContactSubmit}
       />
       <div className="palace-page-back-link">
         <Link to="/" className="palace-page-back-link-anchor">

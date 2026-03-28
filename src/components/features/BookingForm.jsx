@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './BookingForm.css';
 import { Card, Input, Button, LoadingSpinner, Modal } from '../ui';
+import { submitBooking } from '../../services/apiService';
 
 function BookingForm({ onSubmit, className = '' }) {
   const [formData, setFormData] = useState({
@@ -58,21 +59,6 @@ function BookingForm({ onSubmit, className = '' }) {
     return Object.keys(newErrors).length === 0;
   };
 
-  const sendBookingEnquiry = async (data) => {
-    const response = await fetch('/api/booking-enquiry', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'Failed to send enquiry');
-    }
-
-    return response.json();
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
@@ -81,15 +67,17 @@ function BookingForm({ onSubmit, className = '' }) {
     setApiError('');
 
     try {
-      // Send booking enquiry to API
-      await sendBookingEnquiry(formData);
-      
-      // Call onSubmit if provided
-      if (onSubmit) {
-        await onSubmit(formData);
-      }
-      
-      // Show success modal
+      await submitBooking({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        checkIn: formData.checkIn,
+        checkOut: formData.checkOut,
+        adults: parseInt(formData.adults, 10),
+        children: parseInt(formData.children || 0, 10),
+      });
+
+      if (onSubmit) await onSubmit(formData);
       setShowSuccessModal(true);
     } catch (error) {
       console.error('Booking enquiry error:', error);
