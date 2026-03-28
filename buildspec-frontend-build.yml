@@ -1,0 +1,40 @@
+# buildspec-frontend-build.yml
+# Used by: Prod pipeline — builds frontend ONLY, outputs artifact for approval gate
+# The actual deploy happens in buildspec-frontend-deploy.yml after manual approval
+# Required CodeBuild env vars: ENV
+
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 22
+    commands:
+      - echo "Installing frontend dependencies..."
+      - npm ci
+
+  pre_build:
+    commands:
+      - echo "Fetching VITE_API_BASE_URL from SSM for ENV=$ENV..."
+      - export VITE_API_BASE_URL=$(aws ssm get-parameter
+          --name /hotel/${ENV}/VITE_API_BASE_URL
+          --query Parameter.Value
+          --output text
+          --region ap-south-1)
+      - echo "API URL -> $VITE_API_BASE_URL"
+      - echo "Build time -> $(date)"
+
+  build:
+    commands:
+      - echo "Building React frontend (Vite) for PROD..."
+      - npm run build
+      - echo "Build complete. Size:"
+      - du -sh dist/
+
+# Output the full dist/ directory as the pipeline artifact
+# This artifact is passed to buildspec-frontend-deploy.yml after approval
+artifacts:
+  files:
+    - '**/*'
+  base-directory: dist
+  discard-paths: no

@@ -1,0 +1,21 @@
+# buildspec-frontend-deploy.yml
+# Used by: Prod pipeline — deploys the pre-built dist/ artifact to S3 + CloudFront
+# Runs AFTER manual approval gate
+# Input: ProdFrontendArtifact (the dist/ folder from buildspec-frontend-build.yml)
+# Required CodeBuild env vars: ENV, FRONTEND_BUCKET, CF_DISTRIBUTION_ID
+
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - echo "Deploying frontend artifact to s3://$FRONTEND_BUCKET ..."
+      - echo "Contents received:"
+      - ls -la
+      # Sync static assets with long cache (hashed filenames from Vite)
+      - aws s3 sync . s3://$FRONTEND_BUCKET --delete --cache-control "max-age=31536000,public,immutable"
+      # Override index.html with no-cache so browsers always get the latest HTML
+      - aws s3 cp index.html s3://$FRONTEND_BUCKET/index.html --cache-control "no-cache,no-store,must-revalidate"
+      - echo "Invalidating CloudFront distribution $CF_DISTRIBUTION_ID ..."
+      - aws cloudfront create-invalidation --distribution-id $CF_DISTRIBUTION_ID --paths "/*"
+      - echo "PRODUCTION frontend deploy complete!"

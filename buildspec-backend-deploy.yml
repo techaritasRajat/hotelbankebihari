@@ -1,0 +1,18 @@
+# buildspec-backend-deploy.yml
+# Used by: Prod pipeline — deploys the pre-built function.zip artifact to Lambda
+# Runs AFTER manual approval gate
+# Input: ProdBackendArtifact (function.zip from buildspec-backend-build.yml)
+# Required CodeBuild env vars: ENV, LAMBDA_FUNCTION_NAME
+
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - echo "Deploying Lambda artifact to $LAMBDA_FUNCTION_NAME ..."
+      - ls -la function.zip
+      - aws lambda update-function-code
+          --function-name $LAMBDA_FUNCTION_NAME
+          --zip-file fileb://function.zip
+          --region ap-south-1
+      - echo "PRODUCTION backend deploy complete!"

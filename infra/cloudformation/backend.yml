@@ -1,0 +1,318 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Banke Bihari Hotel - Backend (DynamoDB + Lambda + API Gateway)
+
+Parameters:
+  Env:
+    Type: String
+    AllowedValues: [stage, prod]
+    Description: Deployment environment (stage or prod)
+
+  HostedZoneId:
+    Type: String
+    Default: 'Z0569959FN4GGCI80UXP'
+    Description: Route 53 Hosted Zone ID for shribankebiharimaheshwar.com
+
+  ApiCertificateArn:
+    Type: String
+    Default: ''
+    Description: >
+      ACM certificate ARN in ap-south-1 for API Gateway custom domain.
+      Leave empty to skip custom domain setup (API will use the default execute-api URL).
+      Create a certificate in ap-south-1 and re-deploy this stack to enable custom domains.
+
+Conditions:
+  IsProd: !Equals [!Ref Env, prod]
+  HasApiCert: !Not [!Equals [!Ref ApiCertificateArn, '']]
+
+Mappings:
+  EnvConfig:
+    stage:
+      ApiDomain: api-stage.shribankebiharimaheshwar.com
+      CorsOrigin: https://stage.shribankebiharimaheshwar.com
+    prod:
+      ApiDomain: api.shribankebiharimaheshwar.com
+      CorsOrigin: https://shribankebiharimaheshwar.com
+
+Resources:
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # DynamoDB Tables
+  # ────────────────────────────────────────────────────────────────────────────
+
+  SubmissionsTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      TableName: !Sub hotel-submissions-${Env}
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: PK
+          AttributeType: S
+        - AttributeName: SK
+          AttributeType: S
+        - AttributeName: status
+          AttributeType: S
+        - AttributeName: createdAt
+          AttributeType: S
+        - AttributeName: personId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: PK
+          KeyType: HASH
+        - AttributeName: SK
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: status-createdAt-index
+          KeySchema:
+            - AttributeName: status
+              KeyType: HASH
+            - AttributeName: createdAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: personId-createdAt-index
+          KeySchema:
+            - AttributeName: personId
+              KeyType: HASH
+            - AttributeName: createdAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: !If [IsProd, true, false]
+      Tags:
+        - Key: Project
+          Value: HotelBankeBihari
+        - Key: Env
+          Value: !Ref Env
+
+  PersonsTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      TableName: !Sub hotel-persons-${Env}
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: PK
+          AttributeType: S
+        - AttributeName: SK
+          AttributeType: S
+        - AttributeName: email
+          AttributeType: S
+      KeySchema:
+        - AttributeName: PK
+          KeyType: HASH
+        - AttributeName: SK
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: email-index
+          KeySchema:
+            - AttributeName: email
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: !If [IsProd, true, false]
+      Tags:
+        - Key: Project
+          Value: HotelBankeBihari
+        - Key: Env
+          Value: !Ref Env
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # Lambda IAM Role
+  # ────────────────────────────────────────────────────────────────────────────
+
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub hotel-api-${Env}-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: DynamoDBAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:PutItem
+                  - dynamodb:GetItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:DeleteItem
+                  - dynamodb:Query
+                  - dynamodb:Scan
+                Resource:
+                  - !GetAtt SubmissionsTable.Arn
+                  - !Sub ${SubmissionsTable.Arn}/index/*
+                  - !GetAtt PersonsTable.Arn
+                  - !Sub ${PersonsTable.Arn}/index/*
+        - PolicyName: SSMAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ssm:GetParameter
+                  - ssm:GetParameters
+                Resource: !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/hotel/${Env}/*
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # Lambda Function
+  # ────────────────────────────────────────────────────────────────────────────
+
+  LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub hotel-api-${Env}
+      Runtime: nodejs22.x
+      # handler matches backend/lambda.js export
+      Handler: lambda.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Timeout: 30
+      MemorySize: 256
+      Environment:
+        Variables:
+          NODE_ENV: production
+          DEPLOY_ENV: !Ref Env
+          AWS_ACCOUNT_ID: !Ref AWS::AccountId
+          DYNAMODB_SUBMISSIONS_TABLE: !Ref SubmissionsTable
+          DYNAMODB_PERSONS_TABLE: !Ref PersonsTable
+      # Placeholder — CodeBuild replaces this on first deploy
+      Code:
+        ZipFile: |
+          exports.handler = async () => ({
+            statusCode: 200,
+            body: JSON.stringify({ status: 'placeholder - awaiting CodeBuild deployment' })
+          });
+      Tags:
+        - Key: Project
+          Value: HotelBankeBihari
+        - Key: Env
+          Value: !Ref Env
+
+  LambdaLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/hotel-api-${Env}
+      RetentionInDays: !If [IsProd, 90, 14]
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # API Gateway HTTP API (v2)
+  # ────────────────────────────────────────────────────────────────────────────
+
+  HttpApi:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: !Sub hotel-api-${Env}
+      ProtocolType: HTTP
+      Description: !Sub Banke Bihari Hotel API - ${Env}
+      CorsConfiguration:
+        AllowOrigins:
+          - !FindInMap [EnvConfig, !Ref Env, CorsOrigin]
+          - http://localhost:5173
+        AllowMethods: [GET, POST, PATCH, DELETE, OPTIONS]
+        AllowHeaders: [Content-Type, Authorization]
+        MaxAge: 300
+
+  LambdaIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref HttpApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub
+        - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${FnArn}/invocations
+        - FnArn: !GetAtt LambdaFunction.Arn
+      PayloadFormatVersion: '2.0'
+
+  DefaultRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: $default
+      Target: !Sub integrations/${LambdaIntegration}
+
+  ApiStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref HttpApi
+      StageName: $default
+      AutoDeploy: true
+
+  # Allow API Gateway to invoke Lambda
+  ApiGatewayLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref LambdaFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*/*
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # API Gateway Custom Domain (optional — only when ApiCertificateArn is provided)
+  # To enable: create an ACM cert in ap-south-1 and re-deploy this stack with ApiCertificateArn
+  # ────────────────────────────────────────────────────────────────────────────
+
+  ApiCustomDomain:
+    Type: AWS::ApiGatewayV2::DomainName
+    Condition: HasApiCert
+    Properties:
+      DomainName: !FindInMap [EnvConfig, !Ref Env, ApiDomain]
+      DomainNameConfigurations:
+        - CertificateArn: !Ref ApiCertificateArn
+          EndpointType: REGIONAL
+
+  ApiMapping:
+    Type: AWS::ApiGatewayV2::ApiMapping
+    Condition: HasApiCert
+    DependsOn: ApiCustomDomain
+    Properties:
+      ApiId: !Ref HttpApi
+      DomainName: !Ref ApiCustomDomain
+      Stage: $default
+
+  ApiCustomDomainDnsRecord:
+    Type: AWS::Route53::RecordSet
+    Condition: HasApiCert
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      Name: !FindInMap [EnvConfig, !Ref Env, ApiDomain]
+      Type: A
+      AliasTarget:
+        DNSName: !GetAtt ApiCustomDomain.RegionalDomainName
+        HostedZoneId: !GetAtt ApiCustomDomain.RegionalHostedZoneId
+        EvaluateTargetHealth: false
+
+Outputs:
+  ApiUrl:
+    Value: !Sub https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com
+    Description: >
+      Default API Gateway URL. Use this value for VITE_API_BASE_URL in SSM until
+      the custom domain (api[-stage].shribankebiharimaheshwar.com) is configured.
+    Export:
+      Name: !Sub hotel-backend-${Env}-api-url
+
+  LambdaFunctionName:
+    Value: !Ref LambdaFunction
+    Description: Lambda function name (used by CodeBuild to deploy code)
+    Export:
+      Name: !Sub hotel-backend-${Env}-lambda-name
+
+  SubmissionsTableName:
+    Value: !Ref SubmissionsTable
+    Export:
+      Name: !Sub hotel-backend-${Env}-submissions-table
+
+  PersonsTableName:
+    Value: !Ref PersonsTable
+    Export:
+      Name: !Sub hotel-backend-${Env}-persons-table

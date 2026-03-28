@@ -1,0 +1,45 @@
+# buildspec-backend.yml
+# Used by: Stage pipeline — builds backend Lambda zip AND deploys it in one step
+# Triggered by: push to development branch
+# Required CodeBuild env vars: ENV, LAMBDA_FUNCTION_NAME
+
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 22
+    commands:
+      - echo "Installing backend production dependencies..."
+      - cd backend
+      - npm ci --omit=dev
+      - cd ..
+
+  build:
+    commands:
+      - echo "Packaging Lambda function..."
+      - cd backend
+      # Zip all backend files excluding dev-only dirs and secrets
+      - zip -r ../function.zip .
+          --exclude "scripts/*"
+          --exclude ".env*"
+          --exclude ".gitignore"
+          --exclude "*.local.*"
+          --exclude "node_modules/.bin/*"
+          --exclude "node_modules/.cache/*"
+      - cd ..
+      - echo "Package size:"
+      - du -sh function.zip
+
+  post_build:
+    commands:
+      - echo "Deploying Lambda to $LAMBDA_FUNCTION_NAME ..."
+      - aws lambda update-function-code
+          --function-name $LAMBDA_FUNCTION_NAME
+          --zip-file fileb://function.zip
+          --region ap-south-1
+      - echo "Stage backend deploy complete!"
+
+artifacts:
+  files:
+    - function.zip

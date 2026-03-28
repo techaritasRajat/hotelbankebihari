@@ -1,0 +1,38 @@
+# buildspec-backend-build.yml
+# Used by: Prod pipeline — builds Lambda zip ONLY, outputs artifact for approval gate
+# The actual deploy happens in buildspec-backend-deploy.yml after manual approval
+# Required CodeBuild env vars: ENV
+
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 22
+    commands:
+      - echo "Installing backend production dependencies..."
+      - cd backend
+      - npm ci --omit=dev
+      - cd ..
+
+  build:
+    commands:
+      - echo "Packaging Lambda function for PROD..."
+      - cd backend
+      - zip -r ../function.zip .
+          --exclude "scripts/*"
+          --exclude ".env*"
+          --exclude ".gitignore"
+          --exclude "*.local.*"
+          --exclude "node_modules/.bin/*"
+          --exclude "node_modules/.cache/*"
+      - cd ..
+      - echo "Package size:"
+      - du -sh function.zip
+      - echo "Build time -> $(date)"
+
+# Output function.zip as the pipeline artifact
+# This artifact is passed to buildspec-backend-deploy.yml after approval
+artifacts:
+  files:
+    - function.zip

@@ -1,0 +1,45 @@
+# buildspec-frontend.yml
+# Used by: Stage pipeline — builds AND deploys frontend in one step
+# Triggered by: push to development branch
+# Required CodeBuild env vars: ENV, FRONTEND_BUCKET, CF_DISTRIBUTION_ID
+
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 22
+    commands:
+      - echo "Installing frontend dependencies..."
+      - npm ci
+
+  pre_build:
+    commands:
+      - echo "Fetching VITE_API_BASE_URL from SSM for ENV=$ENV..."
+      - export VITE_API_BASE_URL=$(aws ssm get-parameter
+          --name /hotel/${ENV}/VITE_API_BASE_URL
+          --query Parameter.Value
+          --output text
+          --region ap-south-1)
+      - echo "API URL -> $VITE_API_BASE_URL"
+
+  build:
+    commands:
+      - echo "Building React frontend (Vite)..."
+      - npm run build
+      - echo "Build complete. Contents of dist/:"
+      - ls dist/
+
+  post_build:
+    commands:
+      - echo "Syncing dist/ to s3://$FRONTEND_BUCKET ..."
+      - aws s3 sync dist/ s3://$FRONTEND_BUCKET --delete --cache-control "max-age=31536000,public,immutable"
+      - aws s3 cp dist/index.html s3://$FRONTEND_BUCKET/index.html --cache-control "no-cache,no-store,must-revalidate"
+      - echo "Invalidating CloudFront distribution $CF_DISTRIBUTION_ID ..."
+      - aws cloudfront create-invalidation --distribution-id $CF_DISTRIBUTION_ID --paths "/*"
+      - echo "Stage frontend deploy complete!"
+
+artifacts:
+  files:
+    - '**/*'
+  base-directory: dist

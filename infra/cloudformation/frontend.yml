@@ -1,0 +1,178 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Banke Bihari Hotel - Frontend (S3 + CloudFront + Route 53)
+
+Parameters:
+  Env:
+    Type: String
+    AllowedValues: [stage, prod]
+    Description: Deployment environment (stage or prod)
+
+  CertificateArn:
+    Type: String
+    Default: 'arn:aws:acm:us-east-1:176944445773:certificate/611865ce-2006-4fdc-b7e0-15b35803cf99'
+    Description: ACM wildcard certificate ARN in us-east-1 (required for CloudFront)
+
+  HostedZoneId:
+    Type: String
+    Default: 'Z0569959FN4GGCI80UXP'
+    Description: Route 53 Hosted Zone ID for shribankebiharimaheshwar.com
+
+Mappings:
+  EnvConfig:
+    stage:
+      DomainName: stage.shribankebiharimaheshwar.com
+      Aliases:
+        - stage.shribankebiharimaheshwar.com
+    prod:
+      DomainName: shribankebiharimaheshwar.com
+      Aliases:
+        - shribankebiharimaheshwar.com
+        - www.shribankebiharimaheshwar.com
+
+Conditions:
+  IsProd: !Equals [!Ref Env, prod]
+
+Resources:
+
+  # ── S3 Bucket (private, versioned) ──────────────────────────────────────────
+  FrontendBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Sub hotel-frontend-${Env}
+      VersioningConfiguration:
+        Status: Enabled
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      Tags:
+        - Key: Project
+          Value: HotelBankeBihari
+        - Key: Env
+          Value: !Ref Env
+
+  # ── CloudFront Origin Access Control ────────────────────────────────────────
+  OriginAccessControl:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub hotel-frontend-${Env}-oac
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  # ── CloudFront Distribution ──────────────────────────────────────────────────
+  CloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        HttpVersion: http2
+        IPV6Enabled: true
+        DefaultRootObject: index.html
+        Comment: !Sub Hotel Banke Bihari - ${Env}
+        Aliases: !FindInMap [EnvConfig, !Ref Env, Aliases]
+        ViewerCertificate:
+          AcmCertificateArn: !Ref CertificateArn
+          SslSupportMethod: sni-only
+          MinimumProtocolVersion: TLSv1.2_2021
+        Origins:
+          - Id: S3Origin
+            DomainName: !GetAtt FrontendBucket.RegionalDomainName
+            S3OriginConfig:
+              OriginAccessIdentity: ''
+            OriginAccessControlId: !GetAtt OriginAccessControl.Id
+        DefaultCacheBehavior:
+          TargetOriginId: S3Origin
+          ViewerProtocolPolicy: redirect-to-https
+          # CachingOptimized managed policy
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+          AllowedMethods: [GET, HEAD, OPTIONS]
+          CachedMethods: [GET, HEAD]
+          Compress: true
+        # SPA fallback: serve index.html on 403/404 (React Router handles routing)
+        CustomErrorResponses:
+          - ErrorCode: 403
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+            ErrorCachingMinTTL: 10
+          - ErrorCode: 404
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+            ErrorCachingMinTTL: 10
+        PriceClass: PriceClass_100
+      Tags:
+        - Key: Project
+          Value: HotelBankeBihari
+        - Key: Env
+          Value: !Ref Env
+
+  # ── S3 Bucket Policy (allow CloudFront OAC only) ────────────────────────────
+  FrontendBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref FrontendBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AllowCloudFrontOAC
+            Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
+            Action: s3:GetObject
+            Resource: !Sub ${FrontendBucket.Arn}/*
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistribution}
+
+  # ── Route 53 — Apex domain ───────────────────────────────────────────────────
+  ApexDnsRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      Name: !FindInMap [EnvConfig, !Ref Env, DomainName]
+      Type: A
+      AliasTarget:
+        # CloudFront hosted zone ID is always Z2FDTNDATAQYW2
+        HostedZoneId: Z2FDTNDATAQYW2
+        DNSName: !GetAtt CloudFrontDistribution.DomainName
+        EvaluateTargetHealth: false
+
+  # ── Route 53 — www redirect (prod only) ─────────────────────────────────────
+  WwwDnsRecord:
+    Type: AWS::Route53::RecordSet
+    Condition: IsProd
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      Name: www.shribankebiharimaheshwar.com
+      Type: A
+      AliasTarget:
+        HostedZoneId: Z2FDTNDATAQYW2
+        DNSName: !GetAtt CloudFrontDistribution.DomainName
+        EvaluateTargetHealth: false
+
+Outputs:
+  BucketName:
+    Value: !Ref FrontendBucket
+    Description: S3 bucket name for frontend assets
+    Export:
+      Name: !Sub hotel-frontend-${Env}-bucket-name
+
+  DistributionId:
+    Value: !Ref CloudFrontDistribution
+    Description: CloudFront distribution ID (used for cache invalidation in CI/CD)
+    Export:
+      Name: !Sub hotel-frontend-${Env}-distribution-id
+
+  DistributionDomain:
+    Value: !GetAtt CloudFrontDistribution.DomainName
+    Description: CloudFront *.cloudfront.net domain
+
+  FrontendUrl:
+    Value: !Sub
+      - https://${Domain}
+      - Domain: !FindInMap [EnvConfig, !Ref Env, DomainName]
+    Description: Public URL of the frontend

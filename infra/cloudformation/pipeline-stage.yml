@@ -1,0 +1,271 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Banke Bihari Hotel - Stage CI/CD Pipeline only (development branch → stage)
+
+Parameters:
+  CodeStarConnectionArn:
+    Type: String
+    Default: 'arn:aws:codeconnections:ap-south-1:176944445773:connection/5b15d804-d63a-4805-82fc-9a88b7ab27be'
+    Description: GitHub CodeStar/CodeConnections ARN
+
+  GitHubOwner:
+    Type: String
+    Default: 'techaritasRajat'
+    Description: GitHub account/organisation name
+
+  GitHubRepo:
+    Type: String
+    Default: 'hotelbankebihari'
+    Description: GitHub repository name
+
+  StageFrontendBucket:
+    Type: String
+    Default: hotel-frontend-stage
+    Description: S3 bucket name (from hotel-frontend-stage stack Output → BucketName)
+
+  StageCFDistributionId:
+    Type: String
+    Description: CloudFront distribution ID (from hotel-frontend-stage stack Output → DistributionId)
+
+  StageLambdaFunctionName:
+    Type: String
+    Default: hotel-api-stage
+    Description: Lambda function name (from hotel-backend-stage stack Output → LambdaFunctionName)
+
+Resources:
+
+  # ── S3 Artifact Bucket ───────────────────────────────────────────────────────
+  ArtifactBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Sub hotel-pipeline-artifacts-${AWS::AccountId}
+      VersioningConfiguration:
+        Status: Enabled
+      LifecycleConfiguration:
+        Rules:
+          - Id: ExpireOldArtifacts
+            Status: Enabled
+            ExpirationInDays: 30
+      Tags:
+        - Key: Project
+          Value: HotelBankeBihari
+
+  # ── CodeBuild IAM Role ───────────────────────────────────────────────────────
+  CodeBuildRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: hotel-codebuild-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codebuild.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: CodeBuildPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/*
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:PutObject
+                  - s3:ListBucket
+                Resource:
+                  - !GetAtt ArtifactBucket.Arn
+                  - !Sub ${ArtifactBucket.Arn}/*
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:DeleteObject
+                  - s3:ListBucket
+                  - s3:GetObject
+                Resource:
+                  - !Sub arn:aws:s3:::hotel-frontend-stage
+                  - !Sub arn:aws:s3:::hotel-frontend-stage/*
+              - Effect: Allow
+                Action:
+                  - lambda:UpdateFunctionCode
+                  - lambda:GetFunction
+                Resource:
+                  - !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:hotel-api-stage
+              - Effect: Allow
+                Action:
+                  - cloudfront:CreateInvalidation
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - ssm:GetParameter
+                  - ssm:GetParameters
+                Resource: !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/hotel/stage/*
+              - Effect: Allow
+                Action:
+                  - codestar-connections:UseConnection
+                  - codeconnections:UseConnection
+                Resource: !Ref CodeStarConnectionArn
+
+  # ── CodePipeline IAM Role ────────────────────────────────────────────────────
+  CodePipelineRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: hotel-codepipeline-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codepipeline.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: CodePipelinePolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:PutObject
+                  - s3:ListBucket
+                Resource:
+                  - !GetAtt ArtifactBucket.Arn
+                  - !Sub ${ArtifactBucket.Arn}/*
+              - Effect: Allow
+                Action:
+                  - codebuild:StartBuild
+                  - codebuild:BatchGetBuilds
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - codestar-connections:UseConnection
+                  - codeconnections:UseConnection
+                Resource: !Ref CodeStarConnectionArn
+
+  # ── CodeBuild: Frontend (build + deploy) ─────────────────────────────────────
+  StageFrontendBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: hotel-frontend-stage
+      Description: Build and deploy frontend to stage S3 + CloudFront
+      ServiceRole: !GetAtt CodeBuildRole.Arn
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:7.0
+        EnvironmentVariables:
+          - Name: ENV
+            Value: stage
+          - Name: FRONTEND_BUCKET
+            Value: !Ref StageFrontendBucket
+          - Name: CF_DISTRIBUTION_ID
+            Value: !Ref StageCFDistributionId
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: buildspec-frontend.yml
+      Artifacts:
+        Type: CODEPIPELINE
+      LogsConfig:
+        CloudWatchLogs:
+          Status: ENABLED
+          GroupName: /aws/codebuild/hotel-frontend-stage
+
+  # ── CodeBuild: Backend (build + deploy) ──────────────────────────────────────
+  StageBackendBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: hotel-backend-stage
+      Description: Build and deploy backend Lambda to stage
+      ServiceRole: !GetAtt CodeBuildRole.Arn
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:7.0
+        EnvironmentVariables:
+          - Name: ENV
+            Value: stage
+          - Name: LAMBDA_FUNCTION_NAME
+            Value: !Ref StageLambdaFunctionName
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: buildspec-backend.yml
+      Artifacts:
+        Type: CODEPIPELINE
+      LogsConfig:
+        CloudWatchLogs:
+          Status: ENABLED
+          GroupName: /aws/codebuild/hotel-backend-stage
+
+  # ── Stage Pipeline ───────────────────────────────────────────────────────────
+  StagePipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      Name: hotel-stage-pipeline
+      RoleArn: !GetAtt CodePipelineRole.Arn
+      ArtifactStore:
+        Type: S3
+        Location: !Ref ArtifactBucket
+      Stages:
+        - Name: Source
+          Actions:
+            - Name: GitHubSource
+              ActionTypeId:
+                Category: Source
+                Owner: AWS
+                Provider: CodeStarSourceConnection
+                Version: '1'
+              Configuration:
+                ConnectionArn: !Ref CodeStarConnectionArn
+                FullRepositoryId: !Sub ${GitHubOwner}/${GitHubRepo}
+                BranchName: development
+                DetectChanges: true
+                OutputArtifactFormat: CODE_ZIP
+              OutputArtifacts:
+                - Name: SourceArtifact
+              RunOrder: 1
+
+        - Name: BuildAndDeploy
+          Actions:
+            - Name: FrontendBuildDeploy
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Provider: CodeBuild
+                Version: '1'
+              Configuration:
+                ProjectName: !Ref StageFrontendBuildProject
+              InputArtifacts:
+                - Name: SourceArtifact
+              OutputArtifacts:
+                - Name: StageFrontendArtifact
+              RunOrder: 1
+            - Name: BackendBuildDeploy
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Provider: CodeBuild
+                Version: '1'
+              Configuration:
+                ProjectName: !Ref StageBackendBuildProject
+              InputArtifacts:
+                - Name: SourceArtifact
+              OutputArtifacts:
+                - Name: StageBackendArtifact
+              RunOrder: 1
+
+Outputs:
+  StagePipelineUrl:
+    Value: !Sub https://${AWS::Region}.console.aws.amazon.com/codesuite/codepipeline/pipelines/hotel-stage-pipeline/view
+    Description: AWS Console URL for the Stage pipeline
+
+  ArtifactBucketName:
+    Value: !Ref ArtifactBucket
+    Description: S3 bucket storing pipeline artifacts

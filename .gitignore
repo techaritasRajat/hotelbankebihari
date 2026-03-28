@@ -2,7 +2,16 @@
 node_modules/
 .pnp
 .pnp.js
-*.md
+
+# Ignore temporary/implementation notes (keep DEPLOYMENT.md and README.md tracked)
+FEATURABLE_SETUP.md
+FIXES_APPLIED.md
+GUEST_REVIEWS_FINAL_IMPLEMENTATION.md
+GUEST_REVIEWS_TEST_CHECKLIST.md
+IMPLEMENTATION_SUMMARY.md
+QUICK_START.md
+WHATSAPP_DEPLOYMENT_GUIDE.md
+WHATSAPP_IMPLEMENTATION_SUMMARY.md
 # Testing
 coverage/
 *.log
