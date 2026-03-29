@@ -1,8 +1,3 @@
-import logoHome from '../assets/icons/Banke Bihari Hotel.png';
-import logoHeritage from '../assets/icons/Banke Bihari Hotel 1.png';
-import logoPalace from '../assets/icons/Banke Bihari Hotel Logo.png';
-// Bhojnalay logo — replace with dedicated asset when available
-import logoBhojnalay from '../assets/icons/Banke Bihari Hotel.png';
 import { scrollTo } from '../utils';
 
 const serviceDropdownItems = [
@@ -127,8 +122,6 @@ export function getLayoutConfig(pathname) {
   switch (pathname) {
     case '/shree-banke-bihari-heritage':
       return {
-        logoSrc: logoHeritage,
-        logoAlt: 'Shree Banke Bihari Heritage Hotel',
         navigationItems: heritageNavItems,
         footerLinks: heritageFooterLinks,
         footerDescription:
@@ -137,8 +130,6 @@ export function getLayoutConfig(pathname) {
       };
     case '/shree-banke-bihari-palace':
       return {
-        logoSrc: logoPalace,
-        logoAlt: 'Shree Banke Bihari Palace',
         navigationItems: palaceNavItems,
         footerLinks: palaceFooterLinks,
         footerDescription:
@@ -147,8 +138,6 @@ export function getLayoutConfig(pathname) {
       };
     case '/shree-banke-bihari-bhojnalay':
       return {
-        logoSrc: logoBhojnalay,
-        logoAlt: 'Banke Bihari Bhojnalaya',
         navigationItems: bhojnalayNavItems,
         footerLinks: bhojnalayFooterLinks,
         footerDescription:
@@ -157,8 +146,6 @@ export function getLayoutConfig(pathname) {
       };
     default:
       return {
-        logoSrc: logoHome,
-        logoAlt: 'Banke Bihari Maheshwar',
         navigationItems: homeNavItems,
         footerLinks: homeFooterLinks,
         footerDescription:

@@ -1,7 +1,5 @@
 import './Footer.css';
 import Container from './Container';
-import logoFallback from '../../assets/icons/Banke Bihari Hotel.png';
-
 function Footer({ 
   logo, 
   description,
@@ -18,7 +16,7 @@ function Footer({
         <div className="footer-content">
           <div className="footer-section footer-section--about">
             <div className="footer-logo">
-              {logo || <img src={logoFallback} alt="Banke Bihari Maheshwar" className="footer-logo-img" />}
+              {logo}
             </div>
             {description && <p className="footer-description">{description}</p>}
           </div>
@@ -59,11 +57,20 @@ function Footer({
           )}
         </div>
 
-        {copyright && (
-          <div className="footer-bottom">
-            <p className="footer-copyright">{copyright}</p>
-          </div>
-        )}
+        <div className="footer-bottom">
+          {copyright && <p className="footer-copyright">{copyright}</p>}
+          <p className="footer-attribution">
+            Icons by{' '}
+            <a
+              href="https://www.flaticon.com/uicons"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer-attribution-link"
+            >
+              Flaticon UIcons
+            </a>
+          </p>
+        </div>
       </Container>
     </footer>
   );

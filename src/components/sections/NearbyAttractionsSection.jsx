@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import './NearbyAttractionsSection.css';
 import Container from '../layout/Container';
+import UIcon from '../ui/UIcon';
 
 const defaultAttractions = [
   {
@@ -188,7 +189,9 @@ function NearbyAttractionsSection({
                   />
                 ) : (
                   <div className="nearby-card-image-placeholder">
-                    <span className="nearby-card-placeholder-icon">🗺</span>
+                    <span className="nearby-card-placeholder-icon">
+                      <UIcon name="fi-sr-map-marker" size="3rem" />
+                    </span>
                   </div>
                 )}
                 {attraction.distance && (

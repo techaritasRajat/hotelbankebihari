@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Navigation.css';
-import { Button } from '../ui';
+import { Button, UIcon } from '../ui';
 
 function Navigation({ items = [], className = '', isMobile = false, onItemClick }) {
   const [activeItem, setActiveItem] = useState(null);
@@ -60,7 +60,7 @@ function Navigation({ items = [], className = '', isMobile = false, onItemClick 
                   {item.label}
                   {isMobile && (
                     <span className={`navigation-expand-icon ${dropdownOpen ? 'navigation-expand-icon--open' : ''}`} aria-hidden>
-                      ▼
+                      <UIcon name="fi-sr-angle-down" size="0.75rem" color="currentColor" />
                     </span>
                   )}
                 </button>

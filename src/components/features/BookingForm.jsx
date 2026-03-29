@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './BookingForm.css';
-import { Card, Input, Button, LoadingSpinner, Modal } from '../ui';
+import { Card, Input, Button, LoadingSpinner, Modal, UIcon } from '../ui';
 import { submitBooking } from '../../services/apiService';
 
 function BookingForm({ onSubmit, className = '' }) {
@@ -206,7 +206,9 @@ function BookingForm({ onSubmit, className = '' }) {
         className="booking-success-modal"
       >
         <div className="booking-success-content">
-          <div className="success-icon">✓</div>
+          <div className="success-icon">
+            <UIcon name="fi-sr-check-circle" size="3rem" color="var(--color-primary-500)" />
+          </div>
           <p className="success-message">
             Thank you for your interest in Banke Bihari Heritage Hotel. Our team will contact you shortly to confirm your booking details.
           </p>

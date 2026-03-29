@@ -1,3 +1,7 @@
+/* Flaticon UIcons */
+@import '@flaticon/flaticon-uicons/css/solid/rounded';
+@import '@flaticon/flaticon-uicons/css/brands/all';
+
 /* Design System Variables */
 @import './design-system/variables.css';
 

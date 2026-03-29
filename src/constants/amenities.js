@@ -1,41 +1,36 @@
 export const amenities = [
   {
-    icon: '🏊',
-    title: 'Swimming Pool',
-    description: 'Relax in our outdoor swimming pool',
+    icon: 'fi-sr-shower',
+    title: 'Hot Water Bathroom',
+    description: 'Private en-suite bathrooms with 24/7 hot water geyser',
   },
   {
-    icon: '🍽️',
+    icon: 'fi-sr-restaurant',
     title: 'Restaurant',
     description: 'Fine dining with local and international cuisine',
   },
   {
-    icon: '🏋️',
-    title: 'Fitness Center',
-    description: 'State-of-the-art gym equipment',
-  },
-  {
-    icon: '🅿️',
+    icon: 'fi-sr-parking',
     title: 'Parking',
     description: 'Complimentary parking for all guests',
   },
   {
-    icon: '📶',
+    icon: 'fi-sr-wifi',
     title: 'Free Wi-Fi',
     description: 'High-speed internet throughout the hotel',
   },
   {
-    icon: '🚗',
+    icon: 'fi-sr-car',
     title: 'Airport Shuttle',
     description: 'Complimentary airport transfer service',
   },
   {
-    icon: '🧳',
+    icon: 'fi-sr-bell-concierge',
     title: 'Concierge',
     description: '24/7 concierge service',
   },
   {
-    icon: '💼',
+    icon: 'fi-sr-briefcase',
     title: 'Business Center',
     description: 'Fully equipped business facilities',
   },

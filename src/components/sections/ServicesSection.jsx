@@ -2,13 +2,14 @@ import { Link } from 'react-router-dom';
 import './PropertyCardsSection.css';
 import './ServicesSection.css';
 import Container from '../layout/Container';
+import UIcon from '../ui/UIcon';
 
 const services = [
   // ── Stays & Dining ──────────────────────────────────────────────
   {
     id: 'heritage-stay',
     category: 'Stays & Dining',
-    icon: '🏨',
+    icon: 'fi-sr-bed',
     title: 'Luxury Heritage Experience',
     description:
       'Immerse yourself in the timeless elegance of Shree Banke Bihari Heritage Hotel. Beautifully restored rooms, period-inspired interiors, and modern comforts come together to offer a stay that feels both regal and deeply personal.',
@@ -18,7 +19,7 @@ const services = [
   {
     id: 'palace-stay',
     category: 'Stays & Dining',
-    icon: '🏰',
+    icon: 'fi-sr-castle',
     title: 'Royal & Affordable Palace Stay',
     description:
       'Experience the grandeur of royalty without compromise at Shree Banke Bihari Palace. Well-appointed rooms, heritage ambiance, and warm hospitality deliver a regal getaway that is accessible to every traveller.',
@@ -28,7 +29,7 @@ const services = [
   {
     id: 'dining',
     category: 'Stays & Dining',
-    icon: '🍽',
+    icon: 'fi-sr-restaurant',
     title: 'Authentic Traditional Dining',
     description:
       'Rediscover the flavours of heritage at Banke Bihari Bhojnalaya. Our chefs craft pure vegetarian meals using time-honoured recipes and fresh, local produce — a soulful culinary journey rooted in tradition and taste.',
@@ -39,7 +40,7 @@ const services = [
   {
     id: 'corporate',
     category: 'Events & Celebrations',
-    icon: '💼',
+    icon: 'fi-sr-briefcase',
     title: 'Corporate Events & Meetings',
     description:
       'Host productive corporate gatherings in our elegantly appointed heritage venues. From boardroom-style meetings to large-scale conferences, we provide tailored setups, professional audio-visual support, and curated catering to match every business need.',
@@ -49,7 +50,7 @@ const services = [
   {
     id: 'wedding',
     category: 'Events & Celebrations',
-    icon: '💒',
+    icon: 'fi-sr-heart',
     title: 'Weddings & Engagements',
     description:
       'Create memories that last a lifetime in our beautifully adorned celebration spaces. From intimate engagements to grand weddings and pre-wedding ceremonies, our dedicated event team ensures every detail is handled with care and grace.',
@@ -59,7 +60,7 @@ const services = [
   {
     id: 'banquet',
     category: 'Events & Celebrations',
-    icon: '🎉',
+    icon: 'fi-sr-balloons',
     title: 'Banquet Hall & Buffet Services',
     description:
       'From intimate family gatherings to large-scale receptions, our versatile banquet spaces set the stage for every occasion. Enjoy lavish buffet spreads featuring a curated blend of traditional and contemporary cuisines, prepared with the finest ingredients.',
@@ -69,7 +70,7 @@ const services = [
   {
     id: 'devotional',
     category: 'Events & Celebrations',
-    icon: '🙏',
+    icon: 'fi-sr-candle-lotus-yoga',
     title: 'Devotional & Kirtan Ceremonies',
     description:
       'Honour your faith in a spiritually enriching environment. We provide thoughtfully designed spaces, professional sound systems, and devotional catering for bhajans, kirtans, religious discourses, and mandir-based ceremonial gatherings.',
@@ -79,7 +80,7 @@ const services = [
   {
     id: 'cultural',
     category: 'Events & Celebrations',
-    icon: '🎭',
+    icon: 'fi-sr-theater',
     title: 'Cultural & Heritage Events',
     description:
       'Celebrate art, culture, and community in the heart of Maheshwar\'s living heritage. Our venues are ideal for folk performances, heritage walks, cultural exhibitions, and community events that honour the rich legacy of this sacred city.',
@@ -97,7 +98,7 @@ function ServiceCard({ service }) {
       <div className="property-card-image-wrapper services-card-icon-wrapper">
         <div className="services-card-icon-container">
           <span className="services-card-icon" role="img" aria-label={service.title}>
-            {service.icon}
+            <UIcon name={service.icon} size="2.5rem" />
           </span>
           <span className="services-card-category">{service.category}</span>
         </div>

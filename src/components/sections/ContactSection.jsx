@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './ContactSection.css';
 import Container from '../layout/Container';
-import { Card, Input, Button, LoadingSpinner, Modal } from '../ui';
+import { Card, Input, Button, LoadingSpinner, Modal, UIcon } from '../ui';
 import { submitContact } from '../../services/apiService';
 
 const INITIAL_FORM = { name: '', email: '', phone: '', message: '' };
@@ -172,7 +172,9 @@ function ContactSection({
         className="contact-success-modal"
       >
         <div style={{ textAlign: 'center', padding: '16px 0' }}>
-          <div style={{ fontSize: '48px', marginBottom: '16px' }}>✓</div>
+          <div style={{ marginBottom: '16px' }}>
+            <UIcon name="fi-sr-check-circle" size="3rem" color="var(--color-primary-500)" />
+          </div>
           <p style={{ marginBottom: '24px', color: 'var(--color-text-secondary)' }}>
             Thank you for reaching out. Our team will get back to you shortly.
           </p>

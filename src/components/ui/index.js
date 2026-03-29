@@ -5,3 +5,4 @@ export { default as Modal } from './Modal';
 export { default as Badge } from './Badge';
 export { default as LoadingSpinner } from './LoadingSpinner';
 export { default as Image } from './Image';
+export { default as UIcon } from './UIcon';

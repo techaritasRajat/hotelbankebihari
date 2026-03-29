@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import './PropertyCardsSection.css';
 import Container from '../layout/Container';
+import UIcon from '../ui/UIcon';
 
 const defaultProperties = [
   {
@@ -62,7 +63,9 @@ function PropertyCardsSection({
                   />
                 ) : (
                   <div className="property-card-image-placeholder">
-                    <span className="property-card-image-placeholder-icon">🏛</span>
+                    <span className="property-card-image-placeholder-icon">
+                      <UIcon name="fi-sr-building" size="3rem" />
+                    </span>
                   </div>
                 )}
               </div>

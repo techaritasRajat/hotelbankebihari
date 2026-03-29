@@ -1,6 +1,6 @@
 import './QuickContactSection.css';
 import Container from '../layout/Container';
-import { Card, Button } from '../ui';
+import { Card, Button, UIcon } from '../ui';
 
 function QuickContactSection({ 
   title = 'Quick Booking & Enquiry',
@@ -38,7 +38,9 @@ function QuickContactSection({
           <div className="quick-contact-cards">
             {contactInfo.whatsappNumber && (
               <Card className="quick-contact-card" variant="elevated">
-                <div className="quick-contact-card-icon">📱</div>
+                <div className="quick-contact-card-icon">
+                  <UIcon name="fi-brands-whatsapp" size="2rem" />
+                </div>
                 <h3 className="quick-contact-card-title">WhatsApp</h3>
                 <p className="quick-contact-card-value">{contactInfo.whatsappNumber}</p>
                 <p className="quick-contact-card-description">Chat with us instantly</p>
@@ -54,7 +56,9 @@ function QuickContactSection({
             )}
             {contactInfo.phone && (
               <Card className="quick-contact-card" variant="elevated">
-                <div className="quick-contact-card-icon">📞</div>
+                <div className="quick-contact-card-icon">
+                  <UIcon name="fi-sr-phone" size="2rem" />
+                </div>
                 <h3 className="quick-contact-card-title">Phone</h3>
                 <p className="quick-contact-card-value">{contactInfo.phone}</p>
                 <p className="quick-contact-card-description">Call us directly</p>
@@ -70,7 +74,9 @@ function QuickContactSection({
             )}
             {contactInfo.email && (
               <Card className="quick-contact-card" variant="elevated">
-                <div className="quick-contact-card-icon">✉️</div>
+                <div className="quick-contact-card-icon">
+                  <UIcon name="fi-sr-envelope" size="2rem" />
+                </div>
                 <h3 className="quick-contact-card-title">Email</h3>
                 <p className="quick-contact-card-value">{contactInfo.email}</p>
                 <p className="quick-contact-card-description">Send us an email</p>

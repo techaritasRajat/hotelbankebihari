@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import './AdminPage.css';
+import UIcon from '../components/ui/UIcon';
 import {
   adminLogin,
   getStats,
@@ -251,8 +252,8 @@ function PersonCard({ person, token }) {
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontWeight: 600, fontSize: '15px', marginBottom: '4px' }}>{person.name}</div>
           <div style={{ fontSize: '13px', color: '#6b7280', display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-            {person.phone && <span>📞 {person.phone}</span>}
-            {person.email && <span>✉️ {person.email}</span>}
+            {person.phone && <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><UIcon name="fi-sr-phone" size="0.875rem" color="#6b7280" /> {person.phone}</span>}
+            {person.email && <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><UIcon name="fi-sr-envelope" size="0.875rem" color="#6b7280" /> {person.email}</span>}
           </div>
         </div>
         <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
@@ -264,7 +265,9 @@ function PersonCard({ person, token }) {
           <div style={{ fontWeight: 700, fontSize: '18px', color: '#3b82f6' }}>{person.submissionCount}</div>
           <div style={{ fontSize: '11px', color: '#9ca3af' }}>submissions</div>
         </div>
-        <div style={{ fontSize: '20px', color: '#9ca3af', flexShrink: 0 }}>{expanded ? '▲' : '▼'}</div>
+        <div style={{ color: '#9ca3af', flexShrink: 0 }}>
+          <UIcon name={expanded ? 'fi-sr-angle-up' : 'fi-sr-angle-down'} size="1rem" color="#9ca3af" />
+        </div>
       </div>
 
       {expanded && (
@@ -365,7 +368,7 @@ function Dashboard({ token, onLogout }) {
 
       {/* View toggle */}
       <div style={{ display: 'flex', gap: '0', borderBottom: '1px solid #e5e7eb', background: '#fff', padding: '0 24px' }}>
-        {[['submissions', '📋 Submissions'], ['persons', '👥 Persons']].map(([view, label]) => (
+        {[['submissions', 'Submissions'], ['persons', 'Persons']].map(([view, label]) => (
           <button key={view} onClick={() => setActiveView(view)}
             style={{
               padding: '12px 20px', border: 'none', background: 'none', cursor: 'pointer',
@@ -409,7 +412,7 @@ function Dashboard({ token, onLogout }) {
         ) : activeView === 'submissions' ? (
           submissions.length === 0 ? (
             <div className="admin-empty">
-              <div className="admin-empty-icon">📭</div>
+              <div className="admin-empty-icon"><UIcon name="fi-sr-inbox" size="3rem" color="var(--color-neutral-400, #9ca3af)" /></div>
               <p className="admin-empty-text">No submissions yet.</p>
               <p className="admin-empty-sub">Form submissions from the website will appear here.</p>
             </div>
@@ -423,7 +426,7 @@ function Dashboard({ token, onLogout }) {
         ) : (
           persons.length === 0 ? (
             <div className="admin-empty">
-              <div className="admin-empty-icon">👥</div>
+              <div className="admin-empty-icon"><UIcon name="fi-sr-users" size="3rem" color="var(--color-neutral-400, #9ca3af)" /></div>
               <p className="admin-empty-text">No persons yet.</p>
               <p className="admin-empty-sub">People who submit forms will appear here grouped by their contact info.</p>
             </div>

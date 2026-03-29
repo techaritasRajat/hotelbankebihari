@@ -1,29 +1,29 @@
 import { useState } from 'react';
 import './EnquirySection.css';
 import Container from '../layout/Container';
-import { Card, Input, Button, LoadingSpinner, Modal } from '../ui';
+import { Card, Input, Button, LoadingSpinner, Modal, UIcon } from '../ui';
 import { submitEnquiry } from '../../services/apiService';
 
 const SERVICE_GROUPS = [
   {
     label: 'Stays & Dining',
     options: [
-      { value: 'heritage', label: '🏨  Heritage Hotel Stay' },
-      { value: 'palace', label: '🏰  Palace Stay' },
-      { value: 'bhojnalay', label: '🍽  Bhojnalay (Traditional Dining)' },
+      { value: 'heritage', label: 'Heritage Hotel Stay' },
+      { value: 'palace', label: 'Palace Stay' },
+      { value: 'bhojnalay', label: 'Bhojnalay (Traditional Dining)' },
     ],
   },
   {
     label: 'Events & Ceremonies',
     options: [
-      { value: 'events', label: '🎉  Events & Celebrations (Wedding / Corporate / Banquet)' },
-      { value: 'devotional', label: '🙏  Devotional & Kirtan Ceremonies' },
+      { value: 'events', label: 'Events & Celebrations (Wedding / Corporate / Banquet)' },
+      { value: 'devotional', label: 'Devotional & Kirtan Ceremonies' },
     ],
   },
   {
     label: 'Other',
     options: [
-      { value: 'general', label: '💬  General Enquiry' },
+      { value: 'general', label: 'General Enquiry' },
     ],
   },
 ];
@@ -223,7 +223,9 @@ function EnquirySection({
         className="enquiry-success-modal"
       >
         <div className="enquiry-success-content">
-          <div className="enquiry-success-icon">✓</div>
+          <div className="enquiry-success-icon">
+            <UIcon name="fi-sr-check-circle" size="3rem" color="var(--color-primary-500)" />
+          </div>
           <p className="enquiry-success-message">
             Thank you for reaching out to Banke Bihari Maheshwar. We have received your enquiry and our team will get back to you shortly.
           </p>

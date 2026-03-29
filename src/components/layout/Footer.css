@@ -83,7 +83,7 @@
 }
 
 .footer-social-link:hover {
-  background-color: var(--color-primary-500);
+  background-color: var(--color-primary-50);
   transform: translateY(-2px);
 }
 
@@ -97,6 +97,22 @@
   color: var(--color-neutral-400);
   font-size: var(--font-size-sm);
   margin: 0;
+}
+
+.footer-attribution {
+  color: var(--color-neutral-600);
+  font-size: var(--font-size-xs, 0.75rem);
+  margin: var(--spacing-2) 0 0 0;
+}
+
+.footer-attribution-link {
+  color: var(--color-neutral-500);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.footer-attribution-link:hover {
+  color: var(--color-neutral-300);
 }
 
 @media (min-width: 768px) {

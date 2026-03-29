@@ -55,7 +55,7 @@ vite.config.js.timestamp-*
 .npm
 
 # Lock files (keeping package-lock.json for consistency)
-# package-lock.json
+package-lock.json
 # yarn.lock
 # pnpm-lock.yaml
 

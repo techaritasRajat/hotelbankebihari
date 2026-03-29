@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Container from '../layout/Container';
-import { Card, Input, Button, LoadingSpinner, Modal } from '../ui';
+import { Card, Input, Button, LoadingSpinner, Modal, UIcon } from '../ui';
 import { submitFeedback } from '../../services/apiService';
 
 const INITIAL_FORM = { name: '', phone: '', email: '', rating: 0, message: '' };
@@ -180,7 +180,9 @@ function FeedbackSection({
 
       <Modal isOpen={showSuccess} onClose={handleModalClose} title="Thank You!" className="feedback-success-modal">
         <div style={{ textAlign: 'center', padding: '16px 0' }}>
-          <div style={{ fontSize: '48px', marginBottom: '16px' }}>🙏</div>
+          <div style={{ marginBottom: '16px' }}>
+            <UIcon name="fi-sr-check-circle" size="3rem" color="var(--color-primary-500)" />
+          </div>
           <p style={{ marginBottom: '24px', color: 'var(--color-text-secondary)' }}>
             Thank you for sharing your experience. Your feedback means a lot to us!
           </p>
