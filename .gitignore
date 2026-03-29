@@ -19,9 +19,7 @@ coverage/
 # Production
 dist/
 build/
-# Ignore root-level lock file (frontend) but track backend/package-lock.json for npm ci in CodeBuild
-/package-lock.json
-!backend/package-lock.json
+# Lock files are tracked so CodeBuild can use npm ci for reproducible installs
 
 # Environment variables
 .env
