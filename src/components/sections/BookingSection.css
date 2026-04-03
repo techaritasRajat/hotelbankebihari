@@ -16,8 +16,9 @@
 }
 
 .booking-section-title {
+  font-family: var(--font-serif);
   font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-normal);
   color: var(--color-text-primary);
   margin: 0 0 var(--spacing-4) 0;
 }
@@ -25,6 +26,8 @@
 .booking-section-subtitle {
   font-size: var(--font-size-lg);
   color: var(--color-text-secondary);
+  letter-spacing: var(--letter-spacing-wide);
+  line-height: var(--line-height-relaxed);
   margin: 0;
 }
 

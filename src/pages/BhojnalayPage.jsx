@@ -13,12 +13,14 @@ function BhojnalayPage() {
   return (
     <div className="bhojnalay-page">
       <HeroSection
-        title="Welcome to Banke Bihari Bhojnalaya"
+        titlePrefix="Welcome to"
+        title="Banke Bihari Bhojnalaya"
         subtitle="Authentic culinary experience in the heart of heritage"
         ctaText="Contact Us"
         onCtaClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
       />
       <AboutSection
+        eyebrow="our story"
         title="About Banke Bihari Bhojnalaya"
         description="Banke Bihari Bhojnalaya offers an authentic dining experience with traditional recipes passed down through generations. Our restaurant serves pure vegetarian cuisine prepared with the finest ingredients, bringing you the true taste of heritage."
         features={[

@@ -29,7 +29,7 @@
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--letter-spacing-widest);
   color: var(--color-primary-700);
   background-color: var(--color-primary-100);
   padding: var(--spacing-1) var(--spacing-3);

@@ -3,6 +3,7 @@ import Container from '../layout/Container';
 import { GalleryItem } from '../features';
 
 function GallerySection({ 
+  eyebrow,
   title, 
   subtitle,
   images = [],
@@ -12,6 +13,7 @@ function GallerySection({
     <section className={`gallery-section ${className}`} id="gallery">
       <Container>
         <div className="gallery-section-header">
+          {eyebrow && <span className="section-eyebrow">{eyebrow}</span>}
           {title && <h2 className="gallery-section-title">{title}</h2>}
           {subtitle && <p className="gallery-section-subtitle">{subtitle}</p>}
         </div>

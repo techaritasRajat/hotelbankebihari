@@ -3,6 +3,7 @@ import Container from '../layout/Container';
 import { TestimonialCard } from '../features';
 
 function TestimonialsSection({ 
+  eyebrow,
   title, 
   subtitle,
   testimonials = [],
@@ -12,6 +13,7 @@ function TestimonialsSection({
     <section className={`testimonials-section ${className}`} id="testimonials">
       <Container>
         <div className="testimonials-section-header">
+          {eyebrow && <span className="section-eyebrow">{eyebrow}</span>}
           {title && <h2 className="testimonials-section-title">{title}</h2>}
           {subtitle && <p className="testimonials-section-subtitle">{subtitle}</p>}
         </div>

@@ -17,7 +17,8 @@ function HomePage() {
   return (
     <div className="home-page">
       <HeroSection
-        title="Welcome to Banke Bihari Heritage Hotel"
+        titlePrefix="Welcome to"
+        title="Banke Bihari Heritage Hotel"
         subtitle="Experience luxury and comfort in the heart of heritage"
         ctaText="Book Your Stay"
         onCtaClick={handleBookNow}

@@ -3,6 +3,7 @@ import Container from '../layout/Container';
 import { RoomCard } from '../features';
 
 function RoomsSection({ 
+  eyebrow,
   title, 
   subtitle,
   rooms = [],
@@ -13,6 +14,7 @@ function RoomsSection({
     <section className={`rooms-section ${className}`} id="rooms">
       <Container>
         <div className="rooms-section-header">
+          {eyebrow && <span className="section-eyebrow">{eyebrow}</span>}
           {title && <h2 className="rooms-section-title">{title}</h2>}
           {subtitle && <p className="rooms-section-subtitle">{subtitle}</p>}
         </div>

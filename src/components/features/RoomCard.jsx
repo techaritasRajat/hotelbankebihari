@@ -1,8 +1,8 @@
 import './RoomCard.css';
-import { Card, Image, Badge, Button } from '../ui';
+import { Card, Badge, Button, ImageCarousel } from '../ui';
 
 function RoomCard({ room, onBookNow, className = '' }) {
-  const { id, name, description, price, image, amenities = [], featured = false } = room;
+  const { id, name, description, price, images = [], amenities = [], featured = false } = room;
 
   const classes = ['room-card', featured ? 'room-card--featured' : '', className]
     .filter(Boolean)
@@ -15,10 +15,8 @@ function RoomCard({ room, onBookNow, className = '' }) {
           <Badge variant="primary">Featured</Badge>
         </div>
       )}
-      {image && (
-        <div className="room-card-image">
-          <Image src={image} alt={name} />
-        </div>
+      {images.length > 0 && (
+        <ImageCarousel images={images} alt={name} />
       )}
       <div className="room-card-content">
         <h3 className="room-card-title">{name}</h3>

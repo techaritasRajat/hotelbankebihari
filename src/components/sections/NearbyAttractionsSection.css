@@ -10,8 +10,9 @@
 }
 
 .nearby-title {
+  font-family: var(--font-serif);
   font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-normal);
   color: var(--color-text-primary);
   margin: 0 0 var(--spacing-4) 0;
 }
@@ -19,9 +20,10 @@
 .nearby-subtitle {
   font-size: var(--font-size-lg);
   color: var(--color-text-secondary);
+  letter-spacing: var(--letter-spacing-wide);
+  line-height: var(--line-height-relaxed);
   margin: 0 auto;
   max-width: 560px;
-  line-height: var(--line-height-relaxed);
 }
 
 /* Track wrapper — clips overflow on all breakpoints */
@@ -119,15 +121,16 @@
 
 .nearby-card-title {
   font-size: var(--font-size-base);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-medium);
   color: var(--color-text-primary);
   margin: 0;
   line-height: var(--line-height-tight);
 }
 
 .nearby-card-description {
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
+  letter-spacing: var(--letter-spacing-wide);
   margin: 0;
   line-height: var(--line-height-relaxed);
 }

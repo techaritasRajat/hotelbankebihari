@@ -104,8 +104,8 @@ function FeedbackSection({
       <Container>
         <div style={{ maxWidth: '640px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-            {title && <h2 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '8px' }}>{title}</h2>}
-            {subtitle && <p style={{ color: 'var(--color-text-secondary, #6b7280)' }}>{subtitle}</p>}
+            {title && <h2 style={{ fontSize: 'var(--font-size-3xl)', marginBottom: '8px' }}>{title}</h2>}
+            {subtitle && <p style={{ color: 'var(--color-text-secondary)', letterSpacing: 'var(--letter-spacing-wide)', lineHeight: 'var(--line-height-relaxed)' }}>{subtitle}</p>}
           </div>
 
           <Card variant="elevated" style={{ padding: '32px' }}>

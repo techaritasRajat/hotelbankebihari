@@ -3,6 +3,7 @@ import Container from '../layout/Container';
 import { BookingForm } from '../features';
 
 function BookingSection({ 
+  eyebrow,
   title, 
   subtitle,
   onSubmit,
@@ -15,6 +16,7 @@ function BookingSection({
       <Container>
         <div className="booking-section-content">
           <div className="booking-section-header">
+            {eyebrow && <span className="section-eyebrow">{eyebrow}</span>}
             {title && <h2 className="booking-section-title">{title}</h2>}
             {subtitle && <p className="booking-section-subtitle">{subtitle}</p>}
           </div>

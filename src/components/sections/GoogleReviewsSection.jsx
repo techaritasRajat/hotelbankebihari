@@ -6,6 +6,7 @@ import './GoogleReviewsSection.css';
 import './GoogleReviewsOverrides.css';
 
 function GoogleReviewsSection({ 
+  eyebrow,
   title = "Guest Reviews",
   subtitle = "What our guests say about us",
   className = '' 
@@ -16,6 +17,7 @@ function GoogleReviewsSection({
     <section className={`google-reviews-section ${className}`} id="testimonials">
       <Container>
         <div className="google-reviews-header">
+          {eyebrow && <span className="section-eyebrow">{eyebrow}</span>}
           <h2 className="google-reviews-title">{title}</h2>
           {subtitle && <p className="google-reviews-subtitle">{subtitle}</p>}
         </div>

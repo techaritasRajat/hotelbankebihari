@@ -252,7 +252,7 @@ function PersonCard({ person, token }) {
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontWeight: 600, fontSize: '15px', marginBottom: '4px' }}>{person.name}</div>
           <div style={{ fontSize: '13px', color: '#6b7280', display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-            {person.phone && <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><UIcon name="fi-sr-phone" size="0.875rem" color="#6b7280" /> {person.phone}</span>}
+            {person.phone && <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><UIcon name="fi-sr-phone-call" size="0.875rem" color="#6b7280" /> {person.phone}</span>}
             {person.email && <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><UIcon name="fi-sr-envelope" size="0.875rem" color="#6b7280" /> {person.email}</span>}
           </div>
         </div>
@@ -372,10 +372,11 @@ function Dashboard({ token, onLogout }) {
           <button key={view} onClick={() => setActiveView(view)}
             style={{
               padding: '12px 20px', border: 'none', background: 'none', cursor: 'pointer',
-              fontWeight: activeView === view ? 700 : 400,
+              fontFamily: 'var(--font-serif)',
+              fontWeight: activeView === view ? 500 : 400,
               color: activeView === view ? '#3b82f6' : '#6b7280',
               borderBottom: activeView === view ? '2px solid #3b82f6' : '2px solid transparent',
-              fontSize: '14px',
+              fontSize: '15px',
             }}>
             {label}
           </button>
@@ -389,10 +390,11 @@ function Dashboard({ token, onLogout }) {
             <button key={tab} onClick={() => setActiveTab(tab)}
               style={{
                 padding: '8px 16px', border: 'none', background: 'none', cursor: 'pointer',
-                fontWeight: activeTab === tab ? 600 : 400,
+                fontFamily: 'var(--font-serif)',
+                fontWeight: activeTab === tab ? 500 : 400,
                 color: activeTab === tab ? '#3b82f6' : '#6b7280',
                 borderBottom: activeTab === tab ? '2px solid #3b82f6' : '2px solid transparent',
-                fontSize: '13px', whiteSpace: 'nowrap', textTransform: 'capitalize',
+                fontSize: '14px', whiteSpace: 'nowrap', textTransform: 'capitalize',
               }}>
               {tab === 'all' ? 'All' : TYPE_LABELS[tab]}
             </button>

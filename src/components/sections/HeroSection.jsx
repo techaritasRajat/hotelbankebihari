@@ -4,7 +4,9 @@ import { Button } from '../ui';
 import { scrollTo } from '../../utils';
 
 function HeroSection({ 
-  title, 
+  titlePrefix,
+  title,
+  titleLine2,
   subtitle, 
   backgroundImage,
   backgroundVideo,
@@ -42,7 +44,21 @@ function HeroSection({
       <div className="hero-section-overlay"></div>
       <Container>
         <div className="hero-section-content">
-          {title && <h1 className="hero-section-title">{title}</h1>}
+          {title && (
+            <h1 className="hero-section-title">
+              {titlePrefix && (
+                <span className="hero-section-title-prefix">{titlePrefix}</span>
+              )}
+              {titleLine2 ? (
+                <>
+                  <span className="hero-section-title-line">{title}</span>
+                  <span className="hero-section-title-line">{titleLine2}</span>
+                </>
+              ) : (
+                <span className="hero-section-title-nowrap">{title}</span>
+              )}
+            </h1>
+          )}
           {subtitle && <p className="hero-section-subtitle">{subtitle}</p>}
           {ctaText && (
             <Button variant="primary" size="lg" onClick={handleCtaClick}>

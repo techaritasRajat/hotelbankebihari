@@ -14,8 +14,9 @@
 }
 
 .bhojnalay-timings-title {
+  font-family: var(--font-serif);
   font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-normal);
   color: var(--color-text-primary);
   margin: 0 0 var(--spacing-2);
 }
@@ -23,6 +24,8 @@
 .bhojnalay-timings-subtitle {
   font-size: var(--font-size-base);
   color: var(--color-text-secondary);
+  letter-spacing: var(--letter-spacing-wide);
+  line-height: var(--line-height-relaxed);
   margin: 0 0 var(--spacing-8);
 }
 
@@ -50,6 +53,7 @@
 .bhojnalay-timings-value {
   color: var(--color-text-secondary);
   font-size: var(--font-size-sm);
+  letter-spacing: var(--letter-spacing-wide);
 }
 
 .bhojnalay-page-back-link {

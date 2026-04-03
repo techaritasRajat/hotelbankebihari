@@ -57,7 +57,7 @@ function QuickContactSection({
             {contactInfo.phone && (
               <Card className="quick-contact-card" variant="elevated">
                 <div className="quick-contact-card-icon">
-                  <UIcon name="fi-sr-phone" size="2rem" />
+                  <UIcon name="fi-sr-phone-call" size="2rem" />
                 </div>
                 <h3 className="quick-contact-card-title">Phone</h3>
                 <p className="quick-contact-card-value">{contactInfo.phone}</p>

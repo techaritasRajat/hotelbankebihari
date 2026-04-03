@@ -3,6 +3,7 @@ import Container from '../layout/Container';
 import { Image } from '../ui';
 
 function AboutSection({ 
+  eyebrow,
   title, 
   description, 
   image,
@@ -13,6 +14,7 @@ function AboutSection({
     <section className={`about-section ${className}`} id="about">
       <Container>
         <div className="about-section-header">
+          {eyebrow && <span className="section-eyebrow">{eyebrow}</span>}
           {title && <h2 className="about-section-title">{title}</h2>}
           {description && (
             <p className="about-section-description">{description}</p>

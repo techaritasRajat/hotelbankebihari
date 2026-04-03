@@ -20,18 +20,7 @@
   z-index: 1;
 }
 
-.room-card-image {
-  width: 100%;
-  height: 240px;
-  overflow: hidden;
-  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-}
-
-.room-card-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+/* Image area is now fully managed by ImageCarousel */
 
 .room-card-content {
   padding: var(--spacing-6);
@@ -42,8 +31,9 @@
 }
 
 .room-card-title {
+  font-family: var(--font-serif);
   font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-normal);
   color: var(--color-text-primary);
   margin: 0;
 }
@@ -52,6 +42,7 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   line-height: var(--line-height-relaxed);
+  letter-spacing: var(--letter-spacing-wide);
   margin: 0;
   flex: 1;
 }
@@ -90,12 +81,14 @@
 }
 
 .room-card-price-amount {
+  font-family: var(--font-serif);
   font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-normal);
   color: var(--color-primary-600);
 }
 
 .room-card-price-period {
   font-size: var(--font-size-sm);
+  letter-spacing: var(--letter-spacing-wide);
   color: var(--color-text-secondary);
 }

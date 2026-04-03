@@ -34,6 +34,7 @@ const defaultProperties = [
 ];
 
 function PropertyCardsSection({
+  eyebrow,
   title = 'Our Properties',
   subtitle = 'Discover our collection of heritage destinations in Maheshwar',
   properties = defaultProperties,
@@ -44,6 +45,7 @@ function PropertyCardsSection({
     <section className={`property-cards-section ${className}`} id={id}>
       <Container>
         <div className="property-cards-header">
+          {eyebrow && <span className="section-eyebrow">{eyebrow}</span>}
           {title && <h2 className="property-cards-title">{title}</h2>}
           {subtitle && <p className="property-cards-subtitle">{subtitle}</p>}
         </div>

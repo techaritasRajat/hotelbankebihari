@@ -11,6 +11,7 @@ function RoomsPage() {
   return (
     <div className="rooms-page">
       <RoomsSection
+        eyebrow="explore"
         title="All Rooms"
         subtitle="Explore our complete selection of rooms and suites"
         rooms={roomTypes}

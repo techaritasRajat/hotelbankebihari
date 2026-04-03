@@ -28,13 +28,15 @@ function LandingPage() {
   return (
     <div className="landing-page" id="home">
       <HeroSection
-        title="Welcome to Banke Bihari Maheshwar"
+        titlePrefix="Welcome to"
+        title="Banke Bihari Maheshwar"
         subtitle="Heritage. Hospitality. Home."
         backgroundVideo={HERO_VIDEO}
         ctaText="Explore Our Properties"
         onCtaClick={() => scrollTo('about')}
       />
       <PropertyCardsSection
+        eyebrow="discover"
         id="about"
         title="About Us"
         subtitle="Three unique destinations, one extraordinary heritage experience in the heart of Maheshwar"

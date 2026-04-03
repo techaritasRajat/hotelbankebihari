@@ -122,6 +122,10 @@ export const designTokens = {
   // Typography
   typography: {
     fontFamily: {
+      display: [
+        '"Passions Conflict"',
+        'cursive',
+      ].join(', '),
       sans: [
         'system-ui',
         '-apple-system',
@@ -134,10 +138,10 @@ export const designTokens = {
         'sans-serif',
       ].join(', '),
       serif: [
+        '"Palatino Linotype"',
+        'Palatino',
+        '"Book Antiqua"',
         'Georgia',
-        'Cambria',
-        '"Times New Roman"',
-        'Times',
         'serif',
       ].join(', '),
       mono: [

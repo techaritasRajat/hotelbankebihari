@@ -14,12 +14,15 @@ function PalacePage() {
   return (
     <div className="palace-page">
       <HeroSection
-        title="Welcome to Hotel Shri Banke Bihari Palace"
+        titlePrefix="Welcome to"
+        title="Hotel Shri"
+        titleLine2="Banke Bihari Palace"
         subtitle="Experience royal grandeur and heritage elegance"
         ctaText="Contact Us"
         onCtaClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
       />
       <AboutSection
+        eyebrow="our story"
         title="About Hotel Shri Banke Bihari Palace"
         description="Hotel Shri Banke Bihari Palace offers a regal experience with its majestic architecture and royal ambiance. Our palace accommodation combines traditional heritage with modern comfort, providing guests with an unforgettable stay in the heart of heritage."
         features={[
@@ -30,11 +33,13 @@ function PalacePage() {
         ]}
       />
       <AmenitiesSection
+        eyebrow="experience"
         title="Palace Amenities"
         subtitle="Everything you need for a royal stay"
         amenities={amenities}
       />
       <GallerySection
+        eyebrow="admire"
         title="Palace Gallery"
         subtitle="A glimpse of our majestic palace"
         images={[]}
